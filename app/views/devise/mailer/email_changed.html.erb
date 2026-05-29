@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px;">
+    <div style="max-width: 500px; margin: auto; background: white; border-radius: 8px; padding: 30px;">
+      
+      <h2 style="color: #333;">Email alterado </h2>
+      
+      <p>Olá <strong><%= @resource.email %></strong>,</p>
+      
+      <p>Informamos que o email associado à tua conta foi alterado com sucesso.</p>
+
+      <% if @resource.try(:unconfirmed_email?) %>
+        <p>O teu novo email <strong><%= @resource.unconfirmed_email %></strong> está à espera de confirmação.</p>
+      <% end %>
+      
+      <p style="color: #999; font-size: 12px;">
+        Se não fizeste esta alteração, contacta-nos imediatamente.
+      </p>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,2088 @@
+﻿﻿    <body class="bg-gray-900 text-gray-100 min-h-screen" style="flex-wrap: wrap;">
+
+        <!-------------------------------------------- Navbar ------------------------------------------------>
+        <nav class="bg-gray-800 py-4 px-6 shadow-lg fixed w-full z-30 top-0 start-0" style="--nav-height:64px;"">
+            <div class="container mx-auto flex items-center justify-between flex-wrap">
+                
+                <!-- Logo -->
+                <div class="flex items-center space-x-6">
+                    <div class="flex items-center" >
+                        <% if user_signed_in? %>
+                        <div class=" w-8 h-8 rounded-md flex items-center justify-center">
+                            <a href="#inicio-pub"><%= image_tag "logo_sem_texto.png", alt: "Logo", class: "rounded-full" %></a>
+                        </div>
+                        <% else %>
+                        <div class=" w-8 h-8 rounded-md flex items-center justify-center">
+                            <a href="#equipas"><%= image_tag "logo_sem_texto.png", alt: "Logo", class: "rounded-full" %></a>
+                        </div>
+                        <% end %>
+                        <span class="ml-2 font-bold text-xl">SportX</span>
+                    </div>
+                    <% if user_signed_in? %>
+                        <div class="relative flex items-center">
+                            <button id="search-button" class="p-2 rounded-full hover:bg-gray-700">
+                                <i data-feather="search"></i>
+                            </button>
+                            <input type="text" id="search-bar" placeholder="Pesquisa..." 
+                                    class="bg-gray-700 rounded-full px-4 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    <% end %>
+
+                </div>
+
+                <% if user_signed_in? %>
+
+                <!-- Não tem nenhum botão, porque os botoes estão todos no menu -->
+
+                <% else %>
+
+                <div id="nav-links" class="w-full md:w-auto flex justify-center space-x-6 mt-4 md:mt-0 md:order-none order-3 nav-links-overlap">
+                    <a href="#equipas" class="hover:text-orange-400 transition">Equipas</a>
+                    <a href="#finanças" class="hover:text-orange-400 transition">Finanças</a>
+                    <a href="#treinos" class="hover:text-orange-400 transition">Treinos</a>
+                    <a href="#perfis" class="hover:text-orange-400 transition">Perfis</a>
+                    <a href="#comunidade" class="hover:text-orange-400 transition">Comunidade</a>
+                    <a href="#footer" class="hover:text-orange-400 transition">Contactos</a>
+                </div>
+
+                <% end %>
+
+                <!-- Right Side -->
+                <div class="flex items-center space-x-4 right-overlap">
+                <% if user_signed_in? %>    
+
+                    <!-- Apps -->
+                    <button type="button" data-dropdown-toggle="apps-dropdown" class="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
+                        <span class="sr-only">View Apps</span>
+                        <!-- Icon -->
+                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                            <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"/>
+                        </svg>              
+                    </button>
+                    <!-- Dropdown menu -->
+                    <div class="rounded-lg hidden overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:bg-gray-700 dark:divide-gray-600" id="apps-dropdown">
+                        <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            Apps
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 p-4">
+                            <!-- Dashboard -->
+                            <% if current_user.club? or current_user.board? %>
+                                <%= link_to club_dashboard_path, class: "block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group border border-gray-600" do %>
+                                    <i data-feather="shield" class="mx-auto mb-2 w-5 h-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 16 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></i>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Dashboard</p>
+                                <% end %>
+                            <% end %>
+                            <% if current_user.admin? %>
+                                <%= link_to admin_dashboard_path, class: "block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group border border-gray-600" do %>
+                                    <i data-feather="shield" class="mx-auto mb-2 w-5 h-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 16 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></i>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Dashboard</p>
+                                <% end %>
+                            <% end %>
+                            <% if !current_user.club? or (current_user.club? and current_user.club_profile.verified?) %>
+                                <a data-modal-target="liked-modal" data-modal-toggle="liked-modal" class="clickable block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group border border-gray-600">
+                                    <i data-feather="heart" class="mx-auto mb-2 w-5 h-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 16 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></i>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Likes</p>
+                                </a>
+                                <a data-modal-target="saved-modal" data-modal-toggle="saved-modal" class="clickable block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group border border-gray-600 hover:text-green-400">
+                                    <i data-feather="bookmark" class="mx-auto mb-2 w-5 h-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 16 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></i>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Guardados</p>
+                                </a>
+                            <% end %>
+                            <% if (current_user.player? and current_user.player_profile.club_profile.nil? ) or (current_user.coach? and current_user.coach_profile.club_profile.nil?)%>
+                                <a data-modal-target="invitation-modal" data-modal-toggle="invitation-modal" class="clickable block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group border border-gray-600 hover:text-green-400">
+                                    <i data-feather="mail" class="mx-auto mb-2 w-5 h-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 16 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></i>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Convites</p>
+                                </a>
+                            <% end %>
+                        </div>
+                    </div>
+                <% end %>
+
+                    <!-- User Menu -->
+                    <div class="relative" id="user-menu-container">
+                        <% if user_signed_in? %>
+                            <button type="button" class="border border-gray-900 flex text-sm rounded-full md:me-0 hover:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 w-9 h-9 bg-gray-700 items-center justify-center overflow-hidden" id="user-menu-button">
+                                <span class="sr-only">Open user menu</span>
+                                <% 
+                                    current_profile = nil
+                                    if current_user.club?
+                                        current_profile = current_user.club_profile
+                                    elsif current_user.player?
+                                        current_profile = current_user.player_profile
+                                    elsif current_user.board?
+                                        current_profile = current_user.board_profile
+                                    elsif current_user.coach?
+                                        current_profile = current_user.coach_profile
+                                    elsif current_user.admin?
+                                        current_profile = current_user.admin_profile
+                                    elsif current_user.user?
+                                        current_profile = current_user.user_profile
+                                    end
+                                %>
+                                <% if current_profile && current_profile.profile_picture.attached? %>
+                                    <%= image_tag url_for(current_profile.profile_picture), class: "w-full h-full object-cover", id: "profile-pic-img" %>
+                                <% else %>
+                                    <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover", id: "profile-pic-img" %>
+                                <% end %>
+                            </button>
+                        <% else %>
+                            <button type="button" class="border border-gray-900 flex text-sm rounded-full md:me-0 hover:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 w-9 h-9 bg-gray-700 items-center justify-center" id="user-menu-button">
+                                <span class="sr-only">Open user menu</span>
+                                <i data-feather="user"></i>
+                            </button>
+                        <% end %>
+                        <% if user_signed_in? %>
+                            <div class="absolute right-0 mt-2 z-50 hidden w-56 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+                            <div class="px-4 py-3">
+                                <% if current_user.club? %>
+                                    <span class="block text-sm text-gray-900 dark:text-white"> <%= current_user.club_profile.name %> </span>
+                                <% elsif current_user.board? %> 
+                                    <span class="block text-sm text-gray-900 dark:text-white"> <%= current_user.board_profile.name %> </span>
+                                <% elsif current_user.coach? %>
+                                    <span class="block text-sm text-gray-900 dark:text-white"> <%= current_user.coach_profile.name %> </span>
+                                <% elsif current_user.player? %>
+                                    <span class="block text-sm text-gray-900 dark:text-white"> <%= current_user.player_profile.name %> </span>
+                                <% elsif current_user.admin? %>
+                                    <span class="block text-sm text-gray-900 dark:text-white"> <%= current_user.admin_profile.name %> </span>
+                                <% elsif current_user.user? %>
+                                    <span class="block text-sm text-gray-900 dark:text-white"> <%= current_user.user_profile.name %> </span>
+                                <% end %>
+                                <span class="block text-sm  text-gray-500 truncate dark:text-gray-400"> <%= current_user.email %> </span>
+                            </div>
+                            <ul class="py-2" aria-labelledby="user-menu-button">
+                                <li>
+                                    <% if current_user.club? %>
+                                        <% @club_obj = ClubProfile.find(current_user.club_profile.id) %>
+                                        <%= link_to club_profile_path(@club_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                        <i data-feather="user" class="mr-2"></i>Perfil 
+                                        <% end %>
+                                    <% elsif current_user.player? %>
+                                        <% @player_obj = PlayerProfile.find(current_user.player_profile.id) %>
+                                        <%= link_to player_profile_path(@player_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                        <i data-feather="user" class="mr-2"></i>Perfil
+                                        <% end %>
+                                    <% elsif current_user.board? %>
+                                        <% @board_obj = BoardProfile.find(current_user.board_profile.id) %>
+                                        <%= link_to board_profile_path(@board_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                        <i data-feather="user" class="mr-2"></i>Perfil
+                                        <% end %>
+                                    <% elsif current_user.coach? %>
+                                        <% @coach_obj = CoachProfile&.find(current_user.coach_profile.id) %>
+                                        <%= link_to coach_profile_path(@coach_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                        <i data-feather="user" class="mr-2"></i>Perfil
+                                        <% end %>
+                                    <% elsif current_user.admin? %>
+                                        <% @admin_obj = AdminProfile.find(current_user.admin_profile.id) %>
+                                        <%= link_to admin_profile_path(@admin_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                        <i data-feather="user" class="mr-2"></i>Perfil
+                                        <% end %>
+                                    <% elsif current_user.user? %>
+                                        <% @user_obj = UserProfile.find(current_user.user_profile.id) %>
+                                        <%= link_to user_profile_path(@user_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                        <i data-feather="user" class="mr-2"></i>Perfil
+                                        <% end %>
+                                    <% end%>
+                                    
+                                </li>
+                                <li>
+                                    <% if current_user.club? %>
+                                        <% @club_obj = ClubProfile.find(current_user.club_profile.id) %>
+                                        <%= link_to edit_club_profile_path(@club_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                            <i data-feather="settings" class="mr-2"></i>
+                                            <span>Definições</span>
+                                        <% end %>
+                                    <% elsif current_user.player? %>
+                                        <% @player_obj = PlayerProfile.find(current_user.player_profile.id) %>
+                                        <%= link_to edit_player_profile_path(@player_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                            <i data-feather="settings" class="mr-2"></i>
+                                            <span>Definições</span>
+                                        <% end %>
+                                    <% elsif current_user.board? %>
+                                        <% @board_obj = BoardProfile.find(current_user.board_profile.id) %>
+                                            <%= link_to edit_board_profile_path(@board_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                                <i data-feather="settings" class="mr-2"></i>
+                                                <span>Definições</span>
+                                            <% end %>
+                                    <% elsif current_user.coach? %>
+                                        <% @coach_obj = CoachProfile&.find(current_user.coach_profile.id) %>
+                                        <%= link_to edit_coach_profile_path(@coach_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                            <i data-feather="settings" class="mr-2"></i>
+                                            <span>Definições</span>
+                                        <% end %>
+                                    <% elsif current_user.admin? %>
+                                        <% @admin_obj = AdminProfile.find(current_user.admin_profile.id) %>
+                                        <%= link_to edit_admin_profile_path(@admin_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                            <i data-feather="settings" class="mr-2"></i>
+                                            <span>Definições</span>
+                                        <% end %>
+                                    <% elsif current_user.user? %>
+                                        <% @user_obj = UserProfile.find(current_user.user_profile.id) %>
+                                        <%= link_to edit_user_profile_path(@user_obj), class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                            <i data-feather="settings" class="mr-2"></i>
+                                            <span>Definições</span>
+                                        <% end %>
+                                    <% end%>
+                                </li>
+                                <li>
+                                    <%= button_to destroy_user_session_path, method: :delete, form_class: "w-full", class: "w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-red-500 dark:active:text-red-500" do %>
+                                        <i data-feather="log-out" class="mr-2"></i>Log out
+                                    <% end %>
+                                </li>
+                            </ul>
+                        </div>
+                        <% else %>
+                            <div class="absolute right-0 mt-2 z-50 hidden w-48 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600 md:w-56" id="user-dropdown">
+                                <ul class="py-2" aria-labelledby="user-menu-button">
+                                    <li>
+                                    <%= link_to new_user_session_path, class: "flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-gray-100 dark:hover:bg-gray-600 dark:active:bg-gray-600 dark:text-gray-200 dark:hover:text-blue-400 dark:active:text-blue-400" do %>
+                                        <i data-feather="log-in" class="mr-2"></i>
+                                        <span>Login</span>
+                                    <% end %>
+                                    </li>
+                                </ul>
+                            </div>
+                        <% end %>
+                        
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <style>
+            html {
+                scroll-behavior: smooth;
+            }
+
+            @keyframes scroll {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+
+            .card-hover:hover {
+                transform: translateY(-10px);
+                transition: all 0.3s ease;
+            }
+
+            #search-bar {
+                transition: all 0.3s ease;
+                max-width: 0;
+                opacity: 0;
+                overflow: hidden;
+            }
+
+            #search-bar.active {
+                max-width: none;
+                opacity: 1;
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            /* Mobile: behave like desktop (expand over nav) but never overflow viewport */
+            @media (max-width: 640px) {
+                /* On mobile keep the search inline/relative (not pinned),
+                allow it to grow like desktop but constrained by JS/CSS */
+                #search-bar.active {
+                    position: relative;
+                    left: auto;
+                    right: auto;
+                    width: auto;
+                    max-width: calc(100vw - 56px); /* leave room for logo/padding */
+                    box-sizing: border-box;
+                    z-index: 60;
+                    background-color: rgba(55,65,81,0.98);
+                    height: 36px;
+                    padding: 0.5rem 0.75rem;
+                    display: inline-block;
+                }
+            }
+
+            /* Desktop: searchbar expande sobre os links de navegação */
+            @media (min-width: 641px) {
+                #search-bar.active {
+                    position: absolute;
+                    left: 56px;
+                    right: 24px;
+                    max-width: none;
+                    width: calc(100% - 80px);
+                    box-sizing: border-box;
+                    z-index: 60;
+                    background-color: rgba(55,65,81,0.98);
+                }
+            }
+
+            /* Mobile & Desktop: hide right-side buttons when search is active */
+            .right-overlap.hidden-by-search {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transition: opacity .18s ease, visibility .18s;
+            }
+
+            /* Desktop: esconde os links de navegação quando searchbar está activa */
+            @media (min-width: 641px) {
+                .nav-links-overlap {
+                    transition: opacity .18s ease, visibility .18s;
+                }
+
+                .nav-links-overlap.hidden-by-search {
+                    opacity: 0;
+                    visibility: hidden;
+                    pointer-events: none;
+                    position: absolute;
+                    width: 0;
+                    height: 0;
+                    overflow: hidden;
+                }
+            }
+
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide scrollbar for IE, Edge and Firefox */
+            .no-scrollbar {
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+            }
+
+            /* Thin Scrollbar for Emoji Picker */
+            .thin-scrollbar::-webkit-scrollbar {
+                height: 2px;
+            }
+            .thin-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .thin-scrollbar::-webkit-scrollbar-thumb {
+                background-color: #4b5563;
+                border-radius: 20px;
+            }
+        </style>
+
+        <script>
+            // --- Lógica da Barra de Navegação e Pesquisa ---
+            // Aguarda que a página carregue completamente
+            document.addEventListener('DOMContentLoaded', () => {
+                // Inicializa os ícones da biblioteca Feather
+                if (typeof feather !== 'undefined') feather.replace();
+
+                // Obtém o botão de pesquisa pelo seu id
+                const searchButton = document.getElementById('search-button');
+                // Obtém o input da barra de pesquisa
+                const searchBar = document.getElementById('search-bar');
+                // Obtém o container do navbar
+                const navContainer = document.querySelector('nav .container');
+                
+                // Se faltar a searchbar (utilizador não autenticado), salta toda a lógica de pesquisa
+                if (!searchBar || !navContainer) {
+                    // --- Menu do Utilizador (apenas) ---
+                    const userMenuContainer = document.getElementById('user-menu-container');
+                    const userMenuButton = document.getElementById('user-menu-button');
+                    const userDropdown = document.getElementById('user-dropdown');
+                    let isMenuPinned = false;
+                    if (userMenuContainer && userMenuButton && userDropdown) {
+                        userMenuContainer.addEventListener('mouseenter', () => userDropdown.classList.remove('hidden'));
+                        userMenuContainer.addEventListener('mouseleave', () => { if (!isMenuPinned) userDropdown.classList.add('hidden'); });
+                        userMenuButton.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            isMenuPinned = !isMenuPinned;
+                            if (isMenuPinned) userDropdown.classList.remove('hidden');
+                        });
+                        const closePinnedMenu = () => { if (isMenuPinned) { isMenuPinned = false; userDropdown.classList.add('hidden'); } };
+                        document.addEventListener('click', closePinnedMenu);
+                        window.addEventListener('scroll', closePinnedMenu);
+                    }
+                    return;
+                }
+
+                // Funções auxiliares para encontrar elementos e converter valores
+                const getRightSideEl = () => navContainer.querySelector('.right-overlap');
+                const getNavLinksEl = () => document.querySelector('.nav-links-overlap');
+                const parsePx = v => v ? parseFloat(v.replace('px','')) : 0;
+
+                // --- Cálculo da largura do texto da pesquisa ---
+                // Cria um elemento invisível para medir o tamanho do texto
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Função que calcula a largura do texto em pixels
+                const measureTextWidth = text => {
+                    // Obtém os estilos CSS da barra de pesquisa (cor, tamanho da fonte, etc)
+                    const style = window.getComputedStyle(searchBar);
+                    // Define a fonte no canvas com o tamanho e tipo de letra corretos
+                    // Se a propriedade 'font' não existir, cria manualmente a string
+                    ctx.font = style.font || `${style.fontSize} ${style.fontFamily}`;
+                    // Mede a largura do texto e arredonda para cima (Math.ceil)
+                    // O resultado é em pixels
+                    return Math.ceil(ctx.measureText(text || '').width);
+                };
+
+                // --- Ajuste dinâmico da largura da barra de pesquisa ---
+                const adjustSearchWidth = () => {
+                    // Se a barra de pesquisa não tem a classe 'active' (não está aberta)
+                    if (!searchBar.classList.contains('active')) {
+                        // Remove os estilos de largura, largura máxima e posição
+                        // Isto retorna a barra ao estado inicial
+                        searchBar.style.width = '';
+                        searchBar.style.maxWidth = '';
+                        searchBar.style.right = '';
+                        // Sai da função (não há mais nada a fazer)
+                        return;
+                    }
+
+                    // Define o tamanho mínimo da barra quando está aberta
+                    // Em telemóveis (≤640px) o mínimo é 200px, em desktop é 300px
+                    const MIN_ACTIVE = window.innerWidth <= 640 ? 200 : 300;
+                    // Obtém a posição e tamanho do elemento searchBar na tela
+                    const inputRect = searchBar.getBoundingClientRect();
+                    // Obtém o elemento do lado direito (os botões de notificações, etc)
+                    const rightEl = getRightSideEl();
+                    // Obtém o texto que está no input ou usa o placeholder se estiver vazio
+                    const text = searchBar.value || searchBar.placeholder || '';
+                    // Mede a largura do texto em pixels
+                    const textWidth = measureTextWidth(text);
+                    // Obtém os estilos CSS da barra de pesquisa
+                    const cs = window.getComputedStyle(searchBar);
+                    // Calcula o espaço ocupado pela margem esquerda e direita
+                    const paddingLR = parsePx(cs.paddingLeft) + parsePx(cs.paddingRight);
+                    // Calcula a largura total necessária: texto + margens + espaço extra (24px)
+                    const contentWidth = textWidth + paddingLR + 24;
+                    // Define um espaço mínimo entre o input e o lado direito (em pixels)
+                    const MARGIN_RIGHT = 12;
+
+                    // Obtém a largura total da viewport
+                    const viewportRight = window.innerWidth;
+                    // Obtém a posição do container da navegação
+                    const navRect = navContainer.getBoundingClientRect();
+                    // Calcula o espaço disponível para a barra de pesquisa
+                    // É o espaço desde o input até ao fim da navbar, menos uma margem
+                    let availableViewport = Math.max(0, Math.min(viewportRight, navRect.right) - inputRect.left - MARGIN_RIGHT);
+
+                    // Se o elemento do lado direito existe e é visível
+                    if (rightEl && rightEl.offsetParent !== null) {
+                        // Tenta calcular quanto espaço há até aos botões do lado direito
+                        try {
+                            // Obtém a posição do lado direito
+                            const rightRect = rightEl.getBoundingClientRect();
+                            // Recalcula o espaço disponível (não pode ir além dos botões)
+                            availableViewport = Math.min(availableViewport, Math.max(40, rightRect.left - inputRect.left - 8));
+                        } catch (e) {
+                            // Se houver um erro, ignora (o availableViewport mantém o valor anterior)
+                        }
+                    }
+
+                    // Define a largura máxima que a barra de pesquisa pode ter
+                    searchBar.style.maxWidth = availableViewport + 'px';
+                    // Se estamos em desktop, define a distância do lado direito
+                    searchBar.style.right = window.innerWidth > 640 ? MARGIN_RIGHT + 'px' : '';
+                    // Calcula o tamanho mínimo efetivo (não pode ser maior que o espaço disponível)
+                    const effectiveMin = Math.min(MIN_ACTIVE, Math.max(0, availableViewport));
+                    // Calcula a largura desejada (a maior entre o mínimo e o tamanho do conteúdo)
+                    const desired = Math.min(Math.max(effectiveMin, contentWidth), availableViewport);
+                    // Define a largura final da barra de pesquisa
+                    searchBar.style.width = desired + 'px';
+                };
+
+                // --- Mostrar/Esconder elementos da navbar ---
+                const toggleSearchElements = (show) => {
+                    // Obtém o elemento do lado direito
+                    const rightEl = getRightSideEl();
+                    // Obtém os links de navegação do meio
+                    const navLinksEl = getNavLinksEl();
+                    // Se estamos em telemóvel (≤640px) e existe o elemento do lado direito
+                    if (window.innerWidth <= 640 && rightEl) 
+                        // Adiciona ou remove a classe 'hidden-by-search' baseado em 'show'
+                        rightEl.classList.toggle('hidden-by-search', show);
+                    // Se estamos em desktop (>640px) e existem os links de navegação
+                    if (window.innerWidth > 640 && navLinksEl) 
+                        // Adiciona ou remove a classe 'hidden-by-search' dos links
+                        navLinksEl.classList.toggle('hidden-by-search', show);
+                };
+
+                // --- Eventos da Barra de Pesquisa ---
+                if (searchButton) {
+                    // Variável que controla se estamos a fazer a animação de abertura/fecho
+                    // Isto evita que os cliques sejam registados enquanto a animação está a correr
+                    let isTogglingSearch = false;
+                    // Quando o utilizador clica no botão de pesquisa
+                    searchButton.addEventListener('click', (e) => {
+                        // Para a propagação do evento (impede que outros listeners sejam chamados)
+                        e.stopPropagation();
+                        // Marca que estamos a fazer toggle (abertura/fecho)
+                        isTogglingSearch = true;
+                        // Alterna a classe 'active' na barra de pesquisa (adiciona se não tiver, remove se tiver)
+                        const nowActive = searchBar.classList.toggle('active');
+                        // Se agora está ativa (foi aberta)
+                        if (nowActive) toggleSearchElements(true); // Esconde apenas ao abrir
+                        // Usa setTimeout com 0ms para executar depois que a animação CSS começou
+                        setTimeout(() => { 
+                            // Coloca o cursor dentro da barra de pesquisa (focus)
+                            searchBar.focus(); 
+                            // Ajusta a largura da barra ao novo conteúdo
+                            adjustSearchWidth(); 
+                            // Marca que já terminou a animação (permite novos cliques)
+                            isTogglingSearch = false;
+                        }, 0);
+                        // Se agora está inativa (foi fechada)
+                        if (!nowActive) {
+                            // Limpa o texto que estava no input
+                            searchBar.value = '';
+                            // Remove a largura em pixels (volta ao CSS)
+                            searchBar.style.width = '';
+                            // Obtém o elemento do lado direito
+                            const rightEl = getRightSideEl();
+                            // Obtém os links de navegação
+                            const navLinksEl = getNavLinksEl();
+                            // Se o elemento do lado direito existe, remove a classe que o escondia
+                            if (rightEl) rightEl.classList.remove('hidden-by-search');
+                            // Se os links de navegação existem, remove a classe que os escondia após 200ms
+                            if (navLinksEl) setTimeout(() => navLinksEl.classList.remove('hidden-by-search'), 200);
+                        }
+                    });
+
+                    // Handler para quando o utilizador clica fora da barra de pesquisa
+                    document.addEventListener('click', (ev) => {
+                        // Se estamos a fazer toggle, ignora este clique
+                        if (isTogglingSearch) return;
+                        // Se a barra de pesquisa não está ativa, ignora (não há nada a fazer)
+                        if (!searchBar.classList.contains('active')) return;
+                        // Se clicou no input, no botão ou dentro do input, ignora (não quer fechar)
+                        if (ev.target === searchBar || ev.target === searchButton || searchBar.contains(ev.target)) return;
+                        // Se chegou aqui, o utilizador clicou fora, então fecha a barra
+                        // Remove a classe 'active' da barra de pesquisa
+                        searchBar.classList.remove('active');
+                        // Limpa o texto que estava no input
+                        searchBar.value = '';
+                        // Reajusta a largura da barra (reseta os estilos)
+                        adjustSearchWidth();
+                        // Obtém o elemento do lado direito
+                        const rightEl = getRightSideEl();
+                        // Obtém os links de navegação
+                        const navLinksEl = getNavLinksEl();
+                        // Remove a classe que escondia o elemento do lado direito
+                        if (rightEl) rightEl.classList.remove('hidden-by-search');
+                        // Remove a classe que escondia os links após 200ms 
+                        if (navLinksEl) setTimeout(() => navLinksEl.classList.remove('hidden-by-search'), 200);
+                    });
+                }
+
+                // --- Ajuste ao escrever ---
+                // Guarda o comprimento anterior do texto
+                let prevLen = searchBar.value ? searchBar.value.length : 0;
+                // Quando o utilizador escreve algo no input
+                searchBar.addEventListener('input', () => {
+                    // Obtém o novo comprimento do texto
+                    const len = searchBar.value.length;
+                    // Se o comprimento mudou (cresceu ou diminuiu)
+                    if (len !== prevLen) {
+                        // Reajusta a largura da barra de pesquisa
+                        adjustSearchWidth();
+                        // Atualiza o comprimento anterior
+                        prevLen = len;
+                    }
+                });
+
+                // Submeter pesquisa ao pressionar Enter
+                searchBar.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        const query = searchBar.value.trim();
+                        if (query.length > 0) {
+                            window.location.href = "<%= home_search_path %>?query=" + encodeURIComponent(query);
+                        }
+                    }
+                });
+
+                // --- Ajuste ao redimensionar a janela ---
+                // Isto garante que o layout fica correto em diferentes tamanhos
+                window.addEventListener('resize', () => {
+                    // Limpa o timer anterior (se existisse um)
+                    clearTimeout(window.__searchResizeTimer);
+                    // Cria um novo timer que espera 120ms antes de reajustar
+                    // Isto evita chamar adjustSearchWidth muitas vezes durante o redimensionamento
+                    window.__searchResizeTimer = setTimeout(adjustSearchWidth, 120);
+                });
+
+                // Faz um ajuste inicial da largura da barra (quando a página carrega)
+                adjustSearchWidth();
+
+                // --- Menu do Utilizador (Dropdown) ---
+                // Obtém o container do menu do utilizador
+                const userMenuContainer = document.getElementById('user-menu-container');
+                // Obtém o botão do menu do utilizador
+                const userMenuButton = document.getElementById('user-menu-button');
+                // Obtém o dropdown (menu) do utilizador
+                const userDropdown = document.getElementById('user-dropdown');
+                // Variável que controla se o menu está "fixado" (aberto permanentemente)
+                let isMenuPinned = false;
+
+                // Se todos os elementos do menu existem
+                if (userMenuContainer && userMenuButton && userDropdown) {
+                    // Quando o rato entra no container do menu
+                    userMenuContainer.addEventListener('mouseenter', () => 
+                        // Remove a classe 'hidden' (mostra o menu)
+                        userDropdown.classList.remove('hidden'));
+                    // Quando o rato sai do container do menu
+                    userMenuContainer.addEventListener('mouseleave', () => {
+                        // Se o menu não está fixado
+                        if (!isMenuPinned) 
+                            // Adiciona a classe 'hidden' (esconde o menu)
+                            userDropdown.classList.add('hidden');
+                    });
+                    // Quando o utilizador clica no botão do menu
+                    userMenuButton.addEventListener('click', (event) => {
+                        // Para a propagação do evento
+                        event.stopPropagation();
+                        // Alterna o estado do menu (fixado/não-fixado)
+                        isMenuPinned = !isMenuPinned;
+                        // Se agora está fixado
+                        if (isMenuPinned) 
+                            // Mostra o menu
+                            userDropdown.classList.remove('hidden');
+                    });
+                    // Função que fecha o menu se estiver fixado
+                    const closePinnedMenu = () => {
+                        // Se o menu está fixado
+                        if (isMenuPinned) {
+                            // Marca que deixou de estar fixado
+                            isMenuPinned = false;
+                            // Esconde o menu
+                            userDropdown.classList.add('hidden');
+                        }
+                    };
+                    // Quando o utilizador clica em qualquer lugar da página
+                    document.addEventListener('click', closePinnedMenu);
+                    // Quando o utilizador faz scroll na página
+                    window.addEventListener('scroll', closePinnedMenu);
+                }
+            });
+        </script>
+        
+        <!---------------------------------------- Main Pages ----------------------------------------->
+        <!------------------------------------ Logged-in Main Page ------------------------------------>
+        <% if user_signed_in? %>
+            <div class="container mx-auto pt-24 pb-12 px-6">
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <!-- Main Feed -->
+                    <div class="flex-1 space-y-6  pr-2 scroll-smooth no-scrollbar" id="feed-container">
+                        <% if current_user.club? and current_user.club_profile.verification_pending? %>
+                                <div class="flex flex-col items-center p-8 text-yellow-100 rounded-2xl bg-yellow-700/20 border border-yellow-600/40 text-center w-full shadow-lg">
+                                    <div class="w-16 h-16 rounded-full bg-yellow-600/30 flex items-center justify-center mb-4">
+                                        <svg class="w-8 h-8 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xl font-bold mb-2">Verificação Pendente</span>
+                                    <span class="text-sm text-yellow-200/80">Enquanto não é tomada uma decisão por parte da administração, algumas funcionalidades estarão indisponíveis por questões de segurança</span>
+                                </div>
+                        <% elsif current_user.club? and current_user.club_profile.verification_rejected? %>
+                        
+                            <div class="flex flex-col items-center p-8 text-red-100 rounded-2xl bg-red-700/20 border border-red-600/40 text-center w-full shadow-lg">
+                                <div class="w-16 h-16 rounded-full bg-red-600/30 flex items-center justify-center mb-4">
+                                    <svg class="w-8 h-8 text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-xl font-bold mb-2">Verificação Rejeitada</span>
+                                <span class="text-sm text-red-200/80">Se quiser solicitar uma nova verificação poderá fazê-lo através do seu perfil, mudando, primeiro, o documento de verificação na página de edição de perfil</span>
+                            </div>
+                        <% end %>
+                        <!-- Create Post -->
+                        <% if !current_user.club? or (current_user.club? and current_user.club_profile.verified?) %>
+                        <div id="inicio-pub" class="bg-gray-800 rounded-xl p-4 shadow-lg">
+                                <%= form_with model: Post.new, url: posts_path, local: false, multipart: true, id: "new_post_form", class: "space-y-4" do |f| %>
+                                    <div class="flex items-start space-x-4">
+                                        <div class="w-10 h-10 rounded-full bg-gray-700 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                                            <% if current_profile && current_profile.profile_picture.attached? %>
+                                                <%= image_tag url_for(current_profile.profile_picture), class: "w-full h-full object-cover", id: "profile-pic-img" %>
+                                            <% else %>
+                                                <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover", id: "profile-pic-img" %>
+                                            <% end %>
+                                        </div>
+                                        <div class="flex-1">
+                                            <%= f.text_area :content, 
+                                                rows: 3,
+                                                placeholder: "O que estás a pensar?",
+                                                class: "w-full bg-gray-700 rounded-lg p-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" %>
+
+                                            <!-- Image Preview -->
+                                            <div id="image-preview-container" class="hidden mt-3 relative">
+                                                <div id="image-carousel" class="flex overflow-x-auto scroll-smooth rounded-lg no-scrollbar gap-2">
+                                                    <!-- Images will be injected here by JS -->
+                                                </div>
+                                                <button id="prev-image-btn" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-75 hover:bg-opacity-100 text-white p-1 rounded-full hidden transition-all z-10">
+                                                    <i data-feather="chevron-left" class="w-6 h-6"></i>
+                                                </button>
+                                                <button id="next-image-btn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-75 hover:bg-opacity-100 text-white p-1 rounded-full hidden transition-all z-10">
+                                                    <i data-feather="chevron-right" class="w-6 h-6"></i>
+                                                </button>
+                                                <div id="image-dots" class="flex justify-center items-center space-x-2 mt-2">
+                                                    <!-- Dots will be injected here by JS -->
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex justify-between items-center mt-3">
+                                                <div class="flex items-center space-x-2">
+                                                    <%= f.file_field :images, 
+                                                        multiple: true,
+                                                        accept: "image/*",
+                                                        class: "hidden",
+                                                        id: "post-image-upload" %>
+                                                    <label for="post_images_input" class="p-2 text-gray-400 hover:text-blue-400 rounded-full hover:bg-gray-700 cursor-pointer" id="btn-upload-image">
+                                                        <i data-feather="image" class="w-5 h-5"></i>
+                                                    </label>
+                                                </div>
+                                                
+                                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium cursor-pointer flex items-center gap-2">
+                                                    <i data-feather="send" class="w-4 h-4" style="display: inline-block; vertical-align: middle;"></i>
+                                                    <span style="vertical-align: middle;">Publicar</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+
+
+                        </div>
+                        <% end %>
+
+                        
+
+                        <div id="posts_list" class="space-y-6">
+                            <% if @posts.present? %>
+                                <% @posts.each do |post| %>
+                                    <% @post = post.id %>
+                                    <% 
+                                        post_profile = nil
+                                        if post.user.club?
+                                            post_profile = post.user.club_profile
+                                        elsif post.user.player?
+                                            post_profile = post.user.player_profile
+                                        elsif post.user.board?
+                                            post_profile = post.user.board_profile
+                                        elsif post.user.coach?
+                                            post_profile = post.user.coach_profile
+                                        elsif post.user.admin?
+                                            post_profile = post.user.admin_profile
+                                        elsif post.user.user?
+                                            post_profile = post.user.user_profile
+                                        end
+                                    %>
+
+                                    <%= turbo_frame_tag "post_#{post.id}", class: "post-card block" do %>
+                                        <div class="bg-gray-800 rounded-xl p-6 shadow-lg relative" >
+                                            <% if !current_user.club? or (current_user.club? and current_user.club_profile.verified?) %>
+                                            <div class="absolute top-4 right-4 z-10">
+                                                <button class="post-options-btn p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition">
+                                                    <i data-feather="more-vertical"></i>
+                                                </button>
+                                                <div class="post-options-dropdown hidden absolute right-0 mt-2 w-56 bg-gray-700 rounded-md shadow-lg z-10 border border-gray-600">
+                                                    <% if post.user == current_user or current_user.admin?  %>
+                                                        <a data-modal-target="modal-apagar-post-<%= post.id %>" data-modal-toggle="modal-apagar-post-<%= post.id %>" class="save-post-btn block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-red-700 rounded-t-md transition-colors clickable">
+                                                            <div class="flex items-center"><i data-feather="trash-2" class="w-4 h-4 mr-2"></i><span class="save-text">Apagar publicação</span></div>
+                                                        </a>
+                                                    <% end %>
+                                                    <%= render "posts/save_section", post: post %>
+                                                </div>
+                                            </div>
+                                            <%end%>
+
+                                            <!-- Modal confirmação apagar publicação -->
+
+                                            <div id="modal-apagar-post-<%= post.id %>" class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50">
+                                                <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl border border-gray-700 transform transition-all">
+                                                    <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-900 rounded-full">
+                                                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <h3 class="text-xl font-semibold text-white text-center mb-2">Confirmar ação</h3>
+                                                    <p class="text-gray-300 text-center mb-6"> Tem a certeza que pretende apagar esta publicação? Esta ação é irreversível! </b>  </p>
+                                                    <div class="flex gap-3">
+                                                        <button data-modal-hide="modal-apagar-post-<%= post.id %>" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium">
+                                                            Cancelar
+                                                        </button>
+                                                        <%= button_to post_path(post), method: :delete, 
+                                                            onclick: "document.body.style.overflow=''",
+                                                            data: { turbo_frame: "_top", modal_hide: "modal-apagar-post-#{post.id}" },
+                                                            class: "flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium" do %>
+                                                            Apagar Publicação
+                                                        <% end %>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
+
+                                            <div class="clickable" data-modal-target="modal-post-<%=post.id%>" data-modal-toggle="modal-post-<%=post.id%>">
+                                            <div class="flex items-center justify-between mb-4">
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="w-10 h-10 rounded-full bg-gray-700 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                                                        <% if post_profile && post_profile.profile_picture.attached? %>
+                                                            <%= image_tag url_for(post_profile.profile_picture), class: "w-full h-full object-cover" %>
+                                                        <% else %>
+                                                            <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover" %>
+                                                        <% end %>
+                                                    </div>
+                                                <div>
+                                                    <h3 class="font-bold text-white">
+                                                    <% if post.user.club? %>
+                                                        <%= link_to post.user.club_profile.name, club_profile_path(post.user.club_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif post.user.player? %>
+                                                        <%= link_to post.user.player_profile.name, player_profile_path(post.user.player_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif post.user.coach? %>
+                                                        <%= link_to post.user.coach_profile.name, coach_profile_path(post.user.coach_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif post.user.board? %>
+                                                        <%= link_to post.user.board_profile.name, board_profile_path(post.user.board_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif post.user.user? %>
+                                                        <%= link_to post.user.user_profile.name, user_profile_path(post.user.user_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif post.user.admin? %>
+                                                        <%= link_to post.user.admin_profile.name, admin_profile_path(post.user.admin_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% end %>
+                                                    </h3>
+                                                    <span class="text-gray-400 text-sm">
+                                                    <%= time_ago_in_words(post.created_at) %> atrás
+                                                    </span>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <p class="text-gray-300 mb-4">
+                                                <%= post.content %>
+                                            </p>
+                                            
+                                            <% if post.images.attached? %>
+                                                <div class="mb-4">
+                                                    <% if post.images.count == 1 %>
+                                                        <%= image_tag post.images.first, class: "w-full rounded-lg object-cover max-h-96" %>
+                                                    <% else %>
+                                                        <!-- Carrossel com múltiplas imagens -->
+                                                        <div class="post-images-carousel relative rounded-lg overflow-hidden">
+                                                            <div class="carousel-images flex transition-transform duration-300 ease-in-out">
+                                                                <% post.images.each do |image| %>
+                                                                    <div class="carousel-image w-full flex-shrink-0">
+                                                                        <%= image_tag image, class: "w-full h-96 object-contain" %>
+                                                                    </div>
+                                                                <% end %>
+                                                            </div>
+                                                            
+                                                            <!-- Botões de navegação -->
+                                                            <button class="carousel-prev absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-75 hover:bg-opacity-100 text-white p-2 rounded-full transition-all z-10">
+                                                                <i data-feather="chevron-left" class="w-6 h-6"></i>
+                                                            </button>
+                                                            <button class="carousel-next absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-75 hover:bg-opacity-100 text-white p-2 rounded-full transition-all z-10">
+                                                                <i data-feather="chevron-right" class="w-6 h-6"></i>
+                                                            </button>
+                                                            
+                                                            <!-- Dots indicadores -->
+                                                            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                                                                <% post.images.count.times do |i| %>
+                                                                    <button class="carousel-dot w-2 h-2 rounded-full bg-gray-600 transition-colors cursor-pointer"></button>
+                                                                <% end %>
+                                                            </div>
+                                                        </div>
+                                                    <% end %>
+                                                </div>
+                                            
+                                            <% end %>
+                                            </div>    
+                                            <% if !current_user.club? or (current_user.club? and current_user.club_profile.verified?) %>
+                                            <div class="flex items-center pt-4 border-t border-gray-700">
+                                                
+                                                <%= render "posts/like_section", post: post %>
+
+                                                <div data-modal-target="modal-post-<%=post.id%>" data-modal-toggle="modal-post-<%=post.id%>" class="px-4">
+                                                    <%= render "posts/comments_count", post: post %>
+                                                </div>
+                                            </div>
+                                            <% end %>
+                                        </div>
+
+
+                                        <!-- Full Screen Comment Modal -->
+                                        <div id="modal-post-<%=post.id%>" class="fixed inset-0 z-[100] bg-black bg-opacity-50 hidden ">
+                                            <div class="flex flex-col lg:flex-row w-full h-full">
+                                                <!-- Left: Post Content (Visible on Desktop) -->
+                                                <div class="hidden lg:flex lg:w-2/3 h-full bg-transparent bg-opacity-50 items-center justify-center p-8 overflow-y-auto relative">
+                                                    <div id="modal-post-container" class="w-full bg-gray-800 rounded-xl p-6 shadow-2xl flex flex-col" style="max-width: 800px; max-height: 90vh;">
+                                                            <div class="flex items-center justify-between mb-4">
+                                                                <div class="flex items-center space-x-3">
+                                                                    <div class="w-10 h-10 rounded-full bg-gray-700 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                                                                        <% if post_profile && post_profile.profile_picture.attached? %>
+                                                                            <%= image_tag url_for(post_profile.profile_picture), class: "w-full h-full object-cover", id: "profile-pic-img" %>
+                                                                        <% else %>
+                                                                            <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover", id: "profile-pic-img" %>
+                                                                        <% end %>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h3 class="font-bold text-white">
+                                                                            <% if post.user.club? %>
+                                                                                <%= link_to club_profile_path(post.user.club_profile), 
+                                                                                    data: { turbo_frame: "_top" }, 
+                                                                                    class: "hover:underline" do %>
+                                                                                    <%= post.user.club_profile.name %>
+                                                                                <% end %>
+                                                                            <% elsif post.user.player? %>
+                                                                                <%= link_to player_profile_path(post.user.player_profile), 
+                                                                                    data: { turbo_frame: "_top" }, 
+                                                                                    class: "hover:underline" do %>
+                                                                                    <%= post.user.player_profile.name %>
+                                                                                <% end %>
+                                                                            <% elsif post.user.coach? %>
+                                                                                <%= link_to coach_profile_path(post.user.coach_profile), 
+                                                                                    data: { turbo_frame: "_top" }, 
+                                                                                    class: "hover:underline" do %>
+                                                                                    <%= post.user.coach_profile.name %>
+                                                                                <% end %>
+                                                                            <% elsif post.user.board? %>
+                                                                                <%= link_to board_profile_path(post.user.board_profile), 
+                                                                                    data: { turbo_frame: "_top" }, 
+                                                                                    class: "hover:underline" do %>
+                                                                                    <%= post.user.board_profile.name %>
+                                                                                <% end %>
+                                                                            <% elsif post.user.user? %>
+                                                                                <%= link_to user_profile_path(post.user.user_profile), 
+                                                                                    data: { turbo_frame: "_top" }, 
+                                                                                    class: "hover:underline" do %>
+                                                                                    <%= post.user.user_profile.name %>
+                                                                                <% end %>
+                                                                            <% elsif post.user.admin? %>
+                                                                                <%= link_to admin_profile_path(post.user.admin_profile), 
+                                                                                    data: { turbo_frame: "_top" }, 
+                                                                                    class: "hover:underline" do %>
+                                                                                    <%= post.user.admin_profile.name %>
+                                                                                <% end %>
+                                                                            <% end %>
+                                                                        </h3>
+                                                                        <span class="text-gray-400 text-sm">
+                                                                            <%= time_ago_in_words(post.created_at) %> atrás
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="relative">
+                                                                    <% if !current_user.club? or (current_user.club? and current_user.club_profile.verified?) %>
+                                                                    <button class="post-options-btn p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition">
+                                                                        <i data-feather="more-vertical"></i>
+                                                                    </button>
+                                                                    
+                                                                        <div class="post-options-dropdown hidden absolute right-0 mt-2 w-56 bg-gray-700 rounded-md shadow-lg z-10 border border-gray-600">
+                                                                            <% if post.user == current_user or current_user.admin? %>
+                                                                                <a data-modal-target="modal-apagar-post-<%= post.id %>" data-modal-toggle="modal-apagar-post-<%= post.id %>" class="save-post-btn block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-red-700 rounded-t-md transition-colors clickable">
+                                                                                    <div class="flex items-center"><i data-feather="trash-2" class="w-4 h-4 mr-2"></i><span class="save-text">Apagar publicação</span></div>
+                                                                                </a>
+                                                                            <% end %>
+                                                                            <%= render "posts/save_options_modal", post: post %>
+                                                                        </div>
+                                                                    <% end %>
+                                                                </div>
+                                                            </div>
+
+                                                            
+                                                            
+                                                            <p class="text-gray-300 mb-4">
+                                                                <%= post.content %>
+                                                            </p>
+                                                            
+                                                            <% if post.images.attached? %>
+                                                                <div class="mb-4">
+                                                                    <% if post.images.count == 1 %>
+                                                                        <%= image_tag post.images.first, class: "w-full rounded-lg object-cover flex-1 min-h-0" %>
+                                                                    <% else %>
+                                                                        <!-- Carrossel com múltiplas imagens -->
+                                                                        <div class="post-images-carousel relative rounded-lg overflow-hidden">
+                                                                            <div class="carousel-images flex transition-transform duration-300 ease-in-out">
+                                                                                <% post.images.each do |image| %>
+                                                                                    <div class="carousel-image w-full flex-shrink-0">
+                                                                                        <%= image_tag image, class: "w-full h-96 object-contain" %>
+                                                                                    </div>
+                                                                                <% end %>
+                                                                            </div>
+                                                                            
+                                                                            <!-- Botões de navegação -->
+                                                                            <button class="carousel-prev absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-75 hover:bg-opacity-100 text-white p-2 rounded-full transition-all z-10">
+                                                                                <i data-feather="chevron-left" class="w-6 h-6"></i>
+                                                                            </button>
+                                                                            <button class="carousel-next absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-75 hover:bg-opacity-100 text-white p-2 rounded-full transition-all z-10">
+                                                                                <i data-feather="chevron-right" class="w-6 h-6"></i>
+                                                                            </button>
+                                                                            
+                                                                            <!-- Dots indicadores -->
+                                                                            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                                                                                <% post.images.count.times do |i| %>
+                                                                                    <button class="carousel-dot w-2 h-2 rounded-full bg-gray-600 transition-colors cursor-pointer"></button>
+                                                                                <% end %>
+                                                                            </div>
+                                                                        </div>
+                                                                    <% end %>
+                                                                </div>
+                                                            
+                                                            <% end %>
+                                                            
+                                                        <% if !current_user.club? or (current_user.club? and current_user.club_profile.verified?) %>
+                                                            <div class="flex items-center pt-4 border-gray-700">
+                                                                <%= render "posts/like_section_modal", post: post %>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Right: Comments -->
+                                                <div class="w-full lg:w-1/3 h-full bg-gray-800 border-l border-gray-700 flex flex-col">
+                                                    <!-- Header -->
+                                                    <div class="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-800 z-10">
+                                                        <h3 class="text-xl font-bold text-white">
+                                                            Comentários (
+                                                            <%= turbo_frame_tag "comments_count_on_#{post.id}" do %>
+                                                                <%= render "posts/comments_count_on", post: post %> 
+                                                            <% end %>
+                                                            )
+                                                        </h3>
+                                                        <button id="close-modal-btn" class="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-700 transition">
+                                                            <div class="flex items-center gap-2" data-modal-hide="modal-post-<%=post.id%>">
+                                                                <span class="text-sm font-medium">Voltar</span>
+                                                                <i data-feather="x" class="w-5 h-5"></i>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    <!-- Comments List -->
+                                                    <div class="flex-1 overflow-y-auto p-4 space-y-4" id="comments_list_<%= post.id %>">
+                                                        <%= render "post_comments/comments_list", post: post %>
+                                                    </div>
+
+                                                    <!-- Input Area -->
+                                                    <% if !current_user.club? or (current_user.club? and current_user.club_profile.verified?) %>
+                                                    <div class="p-4 border-t border-gray-700 bg-gray-800">
+                                                        <div class="flex items-center space-x-2 ">
+                                                            <%= turbo_frame_tag "comment_form_#{post.id}", class: "w-full" do %>
+                                                                <%= render "post_comments/form", post: post, comment: PostComment.new %>
+                                                            <% end %>
+                                                        </div>
+                                                    </div>
+                                                    <% end %>
+                                                </div>
+                                            </div>
+                                        </div>    
+
+
+                                    <% end %>
+                                <% end %>
+                            <% else %>
+                                <div class="bg-gray-800 rounded-xl p-12 text-center">
+                                    <i data-feather="inbox" class="w-16 h-16 text-gray-600 mx-auto mb-4"></i>
+                                    <h3 class="text-xl font-bold text-gray-400 mb-2">Ainda não há posts</h3>
+                                    <p class="text-gray-500">Sê o primeiro a publicar!</p>
+                                </div>
+                            <% end %>
+                        </div>
+
+                        
+                        <% if @posts.any? %>
+                            <div class="text-center mt-8">
+                                <%= link_to root_path, 
+                                    class: "bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium inline-block transition" do %>
+                                    <i data-feather="refresh-cw" class="w-4 h-4 inline mr-2"></i>
+                                    Ver mais publicações
+                                <% end %>
+                            </div>
+                        <% end %>
+
+
+                        <% else %>
+                            <div class="bg-gray-800 rounded-xl p-12 text-center">
+                                <i data-feather="inbox" class="w-16 h-16 text-gray-600 mx-auto mb-4"></i>
+                                <h3 class="text-xl font-bold text-gray-400 mb-2">Os posts serão mostrados quando o clube for verificado!</h3>
+                            </div>
+                        <% end %>
+                    </div>
+
+                    <!-- Sidebar Suggestions -->
+
+                    
+                <div class="hidden lg:block w-80 space-y-6 flex-shrink-0">
+                    <div class="bg-gray-800 rounded-xl p-6 shadow-lg sticky top-24">
+                        <h3 class="text-xl font-bold text-white mb-6">Sugestões para si</h3>
+                        <div class="space-y-6">
+                            <% if !current_user.club? or (current_user.club? and current_user.club_profile.verified?) %>
+                                <% if @suggested_users.present? %>
+                                    <% @suggested_users.each do |user| %>
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex items-center space-x-3 flex-1 min-w-0">
+                                                <div class="w-12 h-12 rounded-full bg-gray-700 flex-shrink-0 overflow-hidden flex items-center justify-center text-white font-bold">
+                                                    <% 
+                                                        suggested_user_profile = nil
+                                                        if user.club?
+                                                            suggested_user_profile = user.club_profile
+                                                        elsif user.player?
+                                                            suggested_user_profile = user.player_profile
+                                                        elsif user.board?
+                                                            suggested_user_profile = user.board_profile
+                                                        elsif user.coach?
+                                                            suggested_user_profile = user.coach_profile
+                                                        elsif user.admin?
+                                                            suggested_user_profile = user.admin_profile
+                                                        elsif user.user?
+                                                            suggested_user_profile = user.user_profile
+                                                        end
+                                                    %>
+                                                    <% if suggested_user_profile && suggested_user_profile.profile_picture.attached? %>
+                                                        <%= image_tag url_for(suggested_user_profile.profile_picture), class: "w-full h-full object-cover rounded-full", id: "profile-pic-img" %>
+                                                    <% else %>
+                                                        <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover rounded-full", id: "profile-pic-img" %>
+                                                    <% end %>
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <div class="font-semibold text-white truncate">
+                                                        <% if user.club? %>
+                                                            <%= link_to user.club_profile.name, club_profile_path(user.club_profile), 
+                                                                data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                        <% elsif user.player? %>
+                                                            <%= link_to user.player_profile.name, player_profile_path(user.player_profile), 
+                                                                data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                        <% elsif user.coach? %>
+                                                            <%= link_to user.coach_profile.name, coach_profile_path(user.coach_profile), 
+                                                                data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                        <% elsif user.board? %>
+                                                            <%= link_to user.board_profile.name, board_profile_path(user.board_profile), 
+                                                                data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                        <% elsif user.admin? %>
+                                                            <%= link_to user.admin_profile.name, admin_profile_path(user.admin_profile), 
+                                                                data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                        <% elsif user.user? %>
+                                                            <%= link_to user.user_profile.name, user_profile_path(user.user_profile), 
+                                                                data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                        <% end %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <%= render "follows/follow_button_suggestions", user: user %>
+
+                                        </div>
+                                    <% end %>
+                                        <div class="mt-6 pt-4 border-t border-gray-700 text-center">
+                                            <a data-modal-toggle="suggestions-modal" data-modal-target="suggestions-modal" class=" clickable text-sm text-blue-400 hover:text-blue-300">Ver sugestões</a>
+                                        </div>
+                                <% else %>
+                                    <p class="text-gray-400 text-sm text-center">Sem sugestões disponíveis</p>
+                                <% end %>
+                            <% else %>
+                                <p class="text-gray-400 text-sm text-center">As sugestões estarão disponíveis uma vez que o clube for verificado</p>
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            <!-- Suggestions Carousel Modal -->
+            <div id="suggestions-modal" class="fixed inset-0 z-[100] bg-gray-900 bg-opacity-95 hidden flex items-center justify-center">
+                <div class="bg-gray-800 rounded-xl p-8 w-full max-w-6xl relative shadow-2xl mx-4">
+                    <button data-modal-hide="suggestions-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-700 transition">
+                        <i data-feather="x" class="w-6 h-6"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold text-white mb-8 text-center">Sugestões para si</h2>
+                    
+                    <div class="relative">
+                        <div class="overflow-x-auto snap-x snap-mandatory scroll-smooth flex gap-4 px-12 py-4 no-scrollbar" id="suggestions-track">
+                                <% if @suggested_users_modal.present? %>
+                                    <% @suggested_users_modal.each do |user| %>
+                                        <div class="snap-start flex-shrink-0 w-[calc(33.333%-1rem)]">
+                                            <div class="bg-gray-700 rounded-lg p-6 flex flex-col items-center text-center h-full border border-gray-600 transition-colors">
+                                                <% 
+                                                    suggested_user_profile = nil
+                                                    if user.club?
+                                                        suggested_user_profile = user.club_profile
+                                                    elsif user.player?
+                                                        suggested_user_profile = user.player_profile
+                                                    elsif user.board?
+                                                        suggested_user_profile = user.board_profile
+                                                    elsif user.coach?
+                                                        suggested_user_profile = user.coach_profile
+                                                    elsif user.admin?
+                                                        suggested_user_profile = user.admin_profile
+                                                    elsif user.user?
+                                                        suggested_user_profile = user.user_profile
+                                                    end
+                                                %>
+                                                <% if suggested_user_profile && suggested_user_profile.profile_picture.attached? %>
+                                                    <%= image_tag url_for(suggested_user_profile.profile_picture), class: "w-24 h-24 rounded-full object-cover mb-4 border-4 border-gray-800", id: "profile-pic-img" %>
+                                                <% else %>
+                                                    <%= image_tag "default_pp.jpg", class: "w-24 h-24 rounded-full object-cover mb-4 border-4 border-gray-800", id: "profile-pic-img" %>
+                                                <% end %>
+                                                <h3 class="text-lg font-bold text-white">
+                                                    <% if user.club? %>
+                                                        <%= link_to user.club_profile.name, club_profile_path(user.club_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif user.player? %>
+                                                        <%= link_to user.player_profile.name, player_profile_path(user.player_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif user.coach? %>
+                                                        <%= link_to user.coach_profile.name, coach_profile_path(user.coach_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif user.board? %>
+                                                        <%= link_to user.board_profile.name, board_profile_path(user.board_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif user.admin? %>
+                                                        <%= link_to user.admin_profile.name, admin_profile_path(user.admin_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% elsif user.user? %>
+                                                        <%= link_to user.user_profile.name, user_profile_path(user.user_profile), 
+                                                            data: { turbo_frame: "_top" }, class: "hover:underline" %>
+                                                    <% end %>
+                                                </h3>
+                                                <p class="text-gray-400 text-sm mb-6 flex-grow line-clamp-3">
+                                                    <% if user.club? %>
+                                                        <%= user.club_profile.bio %>
+                                                    <% elsif user.player? %>
+                                                        <%= user.player_profile.bio %>
+                                                    <% elsif user.coach? %>
+                                                        <%= user.coach_profile.bio %>
+                                                    <% elsif user.board? %>
+                                                        <%= user.board_profile.bio %>
+                                                    <% elsif user.admin? %>
+                                                        <%= user.admin_profile.bio %>
+                                                    <% elsif user.user? %>
+                                                        <%= user.user_profile.bio %>
+                                                    <% end %>
+                                                </p>
+                                                <%= render "follows/follow_button_suggestions_modal", user: user %>
+                                            </div>
+                                        </div>
+                                    <% end %>
+                                <% end %>
+
+                        </div>
+                        
+                        <button id="prev-suggestion" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-700 p-3 rounded-full text-white hover:bg-blue-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i data-feather="chevron-left" class="w-6 h-6"></i>
+                        </button>
+                        <button id="next-suggestion" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-700 p-3 rounded-full text-white hover:bg-blue-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i data-feather="chevron-right" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal publicações guardadas -->
+
+            <%= render "posts/save_section_modal" %>
+
+            <!-- Modal publicações liked -->
+
+            <%= render "posts/liked_posts_modal" %>
+
+            <div id="invitation-modal" class="fixed inset-0 z-[100] bg-gray-950 bg-opacity-90 hidden flex items-center justify-center">
+                <div class="bg-gray-900 rounded-xl p-8 w-full max-w-4xl relative shadow-2xl mx-4 h-[80vh] flex flex-col">
+                    <button data-modal-hide="invitation-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-700 transition">
+                        <i data-feather="x" class="w-6 h-6"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold text-white mb-6 text-center">Convites Pendentes</h2>
+                    
+                    <div id="invitations-list" class="flex-1 overflow-y-auto space-y-6 pr-2 no-scrollbar">
+                        <div id="saved_posts_list" class="space-y-6">
+                            <% if current_user.player? %>
+                                <% @club_invitations_list_player = ClubInvitationPlayer.where(player_profile_id: current_user.player_profile.id, status: 'pending') %>
+                            <% elsif current_user.coach? %>
+                                <% @club_invitations_list_coach = ClubInvitationCoach.where(coach_profile_id: current_user.coach_profile.id, status: 'pending') %>
+                            <% end %>
+
+                            <% if current_user.player? and @club_invitations_list_player.present? %>
+                                <% @club_invitations_list_player.each do |invitation| %>
+                                    <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+
+                                        <%= link_to club_profile_path(invitation.club_profile) do %>
+                                            <div class="relative h-40 bg-gradient-to-r from-primary/20 to-secondary/20">
+                                                <div class="relative w-full h-40 rounded-lg overflow-hidden shadow-lg">
+                                                    <% if invitation.club_profile.banner_picture.attached? %>
+                                                        <%= image_tag url_for(invitation.club_profile.banner_picture), class: "w-full h-full object-cover" %>
+                                                    <% else %>
+                                                        <%= image_tag "default_banner.jpg", class: "w-full h-full object-cover" %>
+                                                    <% end %>
+                                                </div>
+                                                <div class="absolute top-20 left-4 w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-100">
+                                                    <% if invitation.club_profile.profile_picture.attached? %>
+                                                        <%= image_tag url_for(invitation.club_profile.profile_picture), class: "w-full h-full object-cover" %>
+                                                    <% else %>
+                                                        <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover" %>
+                                                    <% end %>
+                                                </div>
+                                            </div>
+                                        <% end %>
+
+                                        <div class="p-4 pt-4 pb-4 flex items-center justify-between gap-3">
+                                            <%= link_to club_profile_path(invitation.club_profile), class: "ml-36 flex-1 min-w-0" do %>
+                                                <h3 class="font-bold text-lg text-white truncate"><%= invitation.club_profile.name %></h3>
+                                                <p class="text-gray-400 text-sm"><%= invitation.created_at.strftime("%d/%m/%Y") %></p>
+                                            <% end %>
+
+                                            <div class="flex gap-2 flex-shrink-0">
+                                                <button data-modal-toggle="confirm-accept-invitation-<%=invitation.id%>" data-modal-target="confirm-accept-invitation-<%=invitation.id%>" class="px-3 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-bold rounded-xl transition"> Aceitar </button>
+                                                <button data-modal-toggle="confirm-reject-invitation-<%=invitation.id%>" data-modal-target="confirm-reject-invitation-<%=invitation.id%>" class="px-3 py-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white text-sm font-bold rounded-xl transition"> Rejeitar </button>
+                                            </div>
+                                        </div>
+
+                                        <div id="confirm-accept-invitation-<%=invitation.id%>" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal">
+                                            <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl border border-gray-700 transform transition-all">
+                                                <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-900 rounded-full">
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                                    </svg>
+                                                </div>
+                                                <h3 class="text-xl font-semibold text-white text-center mb-2">Confirmar ação</h3>
+                                                <p class="text-gray-300 text-center mb-6"> Tem a certeza que pretende aceitar o convite de "<b><%= invitation.club_profile.name %></b>"?  </p>
+                                                <div class="flex gap-3">
+                                                    <button data-modal-hide="confirm-accept-invitation-<%=invitation.id%>" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium">
+                                                        Cancelar
+                                                    </button>
+                                                     <%= button_to "Aceitar", accept_club_invitation_player_path(invitation), method: :patch, class: "flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium" %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="confirm-reject-invitation-<%=invitation.id%>" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal">
+                                            <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl border border-gray-700 transform transition-all">
+                                                <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-900 rounded-full">
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                                    </svg>
+                                                </div>
+                                                <h3 class="text-xl font-semibold text-white text-center mb-2">Confirmar ação</h3>
+                                                <p class="text-gray-300 text-center mb-6"> Tem a certeza que pretende rejeitar o convite de "<b><%= invitation.club_profile.name %></b>"?  </p>
+                                                <div class="flex gap-3">
+                                                    <button data-modal-hide="confirm-reject-invitation-<%=invitation.id%>" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium">
+                                                        Cancelar
+                                                    </button>
+                                                    <%= button_to "Rejeitar", reject_club_invitation_player_path(invitation), method: :patch, class: "flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium" %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                <% end %>
+                            <% elsif current_user.player? and !@club_invitations_list_player.present? %>
+                                <div class="bg-gray-800 rounded-xl p-12 text-center">
+                                    <i data-feather="mail" class="w-16 h-16 text-gray-600 mx-auto mb-4"></i>
+                                    <h3 class="text-xl font-bold text-gray-400 mb-2">Ainda não tens nenhum convite</h3>
+                                </div>
+                            <% end %>
+
+
+                            <% if current_user.coach? and @club_invitations_list_coach.present? %>
+                                <% @club_invitations_list_coach.each do |invitation| %>
+                                    <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+
+                                        <%= link_to club_profile_path(invitation.club_profile) do %>
+                                            <div class="relative h-40 bg-gradient-to-r from-primary/20 to-secondary/20">
+                                                <div class="relative w-full h-40 rounded-lg overflow-hidden shadow-lg">
+                                                    <% if invitation.club_profile.banner_picture.attached? %>
+                                                        <%= image_tag url_for(invitation.club_profile.banner_picture), class: "w-full h-full object-cover" %>
+                                                    <% else %>
+                                                        <%= image_tag "default_banner.jpg", class: "w-full h-full object-cover" %>
+                                                    <% end %>
+                                                </div>
+                                                <div class="absolute top-20 left-4 w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-100">
+                                                    <% if invitation.club_profile.profile_picture.attached? %>
+                                                        <%= image_tag url_for(invitation.club_profile.profile_picture), class: "w-full h-full object-cover" %>
+                                                    <% else %>
+                                                        <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover" %>
+                                                    <% end %>
+                                                </div>
+                                            </div>
+                                        <% end %>
+
+                                        <div class="p-4 pt-4 pb-4 flex items-center justify-between gap-3">
+                                            <%= link_to club_profile_path(invitation.club_profile), class: "ml-36 flex-1 min-w-0" do %>
+                                                <h3 class="font-bold text-lg text-white truncate"><%= invitation.club_profile.name %></h3>
+                                                <p class="text-gray-400 text-sm"><%= invitation.created_at.strftime("%d/%m/%Y") %></p>
+                                            <% end %>
+
+                                            <div class="flex gap-2 flex-shrink-0">
+                                                <button data-modal-toggle="confirm-accept-invitation-<%=invitation.id%>" data-modal-target="confirm-accept-invitation-<%=invitation.id%>" class="px-3 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-bold rounded-xl transition"> Aceitar </button>
+                                                <button data-modal-toggle="confirm-reject-invitation-<%=invitation.id%>" data-modal-target="confirm-reject-invitation-<%=invitation.id%>" class="px-3 py-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white text-sm font-bold rounded-xl transition"> Rejeitar </button>
+                                            </div>
+                                        </div>
+
+                                        <div id="confirm-accept-invitation-<%=invitation.id%>" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal">
+                                            <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl border border-gray-700 transform transition-all">
+                                                <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-900 rounded-full">
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                                    </svg>
+                                                </div>
+                                                <h3 class="text-xl font-semibold text-white text-center mb-2">Confirmar ação</h3>
+                                                <p class="text-gray-300 text-center mb-6"> Tem a certeza que pretende aceitar o convite de "<b><%= invitation.club_profile.name %></b>"?  </p>
+                                                <div class="flex gap-3">
+                                                    <button data-modal-hide="confirm-accept-invitation-<%=invitation.id%>" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium">
+                                                        Cancelar
+                                                    </button>
+                                                     <%= button_to "Aceitar", accept_club_invitation_coach_path(invitation), method: :patch, class: "flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium" %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="confirm-reject-invitation-<%=invitation.id%>" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal">
+                                            <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl border border-gray-700 transform transition-all">
+                                                <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-900 rounded-full">
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                                    </svg>
+                                                </div>
+                                                <h3 class="text-xl font-semibold text-white text-center mb-2">Confirmar ação</h3>
+                                                <p class="text-gray-300 text-center mb-6"> Tem a certeza que pretende rejeitar o convite de "<b><%= invitation.club_profile.name %></b>"?  </p>
+                                                <div class="flex gap-3">
+                                                    <button data-modal-hide="confirm-reject-invitation-<%=invitation.id%>" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium">
+                                                        Cancelar
+                                                    </button>
+                                                    <%= button_to "Rejeitar", reject_club_invitation_coach_path(invitation), method: :patch, class: "flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium" %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                <% end %>
+                            <% elsif current_user.coach? and !@club_invitations_list_coach.present? %>
+                                <div class="bg-gray-800 rounded-xl p-12 text-center">
+                                    <i data-feather="mail" class="w-16 h-16 text-gray-600 mx-auto mb-4"></i>
+                                    <h3 class="text-xl font-bold text-gray-400 mb-2">Ainda não tens nenhum convite</h3>
+                                </div>
+                            <% end %>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <script>
+                // --- Lógica Principal da Página ---
+                document.addEventListener('DOMContentLoaded', () => {
+                    
+                    // --- Gestor de Janelas (Modais) ---
+                    // Array para guardar a lista de modais abertos (funciona como uma pilha)
+                    const openModals = [];
+
+                    // Função para abrir um modal
+                    const openModal = (modalElement) => {
+                        if (!modalElement) return;
+                        // Calcula um z-index maior que o anterior para o novo modal ficar por cima
+                        const newZIndex = 100 + openModals.length * 10;
+                        modalElement.style.zIndex = newZIndex;
+                        // Remove a classe 'hidden' para mostrar o modal
+                        modalElement.classList.remove('hidden');
+                        // Adiciona o modal à lista de abertos
+                        openModals.push(modalElement);
+                        // Bloqueia o scroll do body para a página de trás não mexer
+                        document.body.style.overflow = 'hidden';
+                    };
+
+                    // Função para fechar um modal
+                    const closeModal = (modalElement) => {
+                        if (!modalElement) return;
+                        // Adiciona a classe 'hidden' para esconder o modal
+                        modalElement.classList.add('hidden');
+                        // Limpa o z-index
+                        modalElement.style.zIndex = '';
+                        // Procura a posição deste modal na lista de abertos
+                        const index = openModals.findIndex(m => m === modalElement);
+                        // Se encontrou, remove-o da lista (splice remove 1 elemento na posição index)
+                        if (index > -1) openModals.splice(index, 1);
+                        // Se não houver mais modais abertos, devolve o scroll à página (body)
+                        if (openModals.length === 0) document.body.style.overflow = '';
+                    };
+
+                    // --- Seleção de Elementos ---
+                    // Guarda referências para os elementos HTML que vamos usar
+                    const modal = document.getElementById('comment-modal');
+                    const closeModalBtn = document.getElementById('close-modal-btn');
+                    const modalPostContainer = document.getElementById('modal-post-container');
+                    const modalCommentsList = document.getElementById('modal-comments-list');
+                    
+                    // --- Abrir Modal de Post ---
+                    const openPostModal = (postCard) => {
+                        const postId = postCard.dataset.postId;
+                        
+                        // Guarda o ID do post atual no modal para sabermos onde comentar
+                        modal.dataset.currentPostId = postId;
+                        
+                        // Configura o container do modal para parecer um card de post
+                        modalPostContainer.classList.add('post-card');
+                        modalPostContainer.dataset.postId = postId;
+                        
+                        // Clona os elementos do post original (cabeçalho, texto, media, ações)
+                        // Usamos cloneNode(true) para copiar tudo sem remover do feed original
+                        const header = postCard.querySelector('.flex.items-center.justify-between.mb-4').cloneNode(true);
+                        const text = postCard.querySelector('.post-text').cloneNode(true);
+                        const media = postCard.querySelector('.post-media').cloneNode(true);
+                        const actions = postCard.querySelector('.post-actions').cloneNode(true);
+
+                        // Ajusta o estilo da imagem/media para ocupar o espaço todo no modal
+                        media.classList.remove('h-64', 'mb-4');
+                        media.classList.add('flex-1', 'w-full');
+
+                        // Limpa o conteúdo anterior do modal
+                        modalPostContainer.innerHTML = '';
+
+                        // Adiciona os elementos clonados ao modal
+                        modalPostContainer.appendChild(header);
+                        modalPostContainer.appendChild(text);
+                        modalPostContainer.appendChild(media);
+                        modalPostContainer.appendChild(actions);
+
+                        // Reinicializa os ícones Feather (porque os novos elementos clonados ainda não são SVG)
+                        feather.replace();
+
+                        // Adiciona um comentário de exemplo apenas no post 1
+                        if (postId === "1") {
+                            modalCommentsList.innerHTML = `
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 rounded-full bg-gray-600 flex-shrink-0 flex items-center justify-center text-xs text-white">U</div>
+                                    <div class="bg-gray-700 rounded-lg p-3 flex-1">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <p class="text-sm font-semibold text-white">Utilizador Exemplo</p>
+                                            <span class="text-xs text-gray-400">Há 2 horas</span>
+                                        </div>
+                                        <p class="text-sm text-gray-300">Grande jogo! Parabéns à equipa. 👏</p>
+                                    </div>
+                                </div>`;
+                        } else {
+                            modalCommentsList.innerHTML = '<p class="text-gray-400 text-sm text-center">Ainda não há comentários.</p>';
+                        }
+
+                        // Abre o modal visualmente
+                        openModal(modal);
+                    };
+
+                    // --- Gestão de Cliques (Event Delegation) ---
+                    // Em vez de adicionar um evento a cada botão, adicionamos um ao 'body' e vemos onde foi o clique.
+                    // Isto é mais eficiente e funciona para elementos criados dinamicamente.
+                    document.body.addEventListener('click', (e) => {
+                        const target = e.target;
+
+                        // 1. Botão de Opções (três pontinhos) - Abre/Fecha menu
+                        const optionsBtn = target.closest('.post-options-btn');
+                        if (optionsBtn) {
+                            e.stopPropagation();
+                            // Fecha outros dropdowns que estejam abertos
+                            document.querySelectorAll('.post-options-dropdown').forEach(d => {
+                                if (d !== optionsBtn.nextElementSibling) d.classList.add('hidden');
+                            });
+                            // Alterna a visibilidade do dropdown atual
+                            optionsBtn.nextElementSibling.classList.toggle('hidden');
+                            return;
+                        }
+
+                        // Fecha dropdowns se clicar fora
+                        if (!target.closest('.post-options-dropdown')) {
+                            document.querySelectorAll('.post-options-dropdown').forEach(d => d.classList.add('hidden'));
+                        }
+
+                        // 2. Botão de Comentário - Abre modal
+                        const commentBtn = target.closest('.comment-btn');
+                        if (commentBtn) {
+                            e.stopPropagation();
+                            const postCard = commentBtn.closest('.post-card');
+                            // Abre o modal do post
+                            openPostModal(postCard);
+                            return;
+                        }
+
+                        // 3. Clique Geral no Post (Abre Modal)
+                        const postCard = target.closest('.post-card');
+                        if (postCard) {
+                            // Ignora se clicou em botões, links ou inputs (para não abrir o modal sem querer)
+                            if (target.closest('a') || target.closest('button') || target.closest('input') || target.closest('textarea')) {
+                                return;
+                            }
+                            // Ignora se o utilizador estiver a selecionar texto
+                            if (window.getSelection().toString().length > 0) return;
+
+                            openPostModal(postCard);
+                        }
+                    });
+
+                    // Botão de fechar modal
+                    closeModalBtn.addEventListener('click', () => {
+                        // Fecha os dropdowns dos 3 pontinhos antes de fechar o modal
+                        document.querySelectorAll('.post-options-dropdown').forEach(d => d.classList.add('hidden'));
+                        closeModal(modal);
+                    });
+
+
+                    // --- Modal de Sugestões (Carrossel) ---
+                    const viewAllSuggestionsBtn = document.getElementById('view-all-suggestions-btn');
+                    const suggestionsModal = document.getElementById('suggestions-modal');
+                    const closeSuggestionsModalBtn = document.getElementById('close-suggestions-modal');
+                    const suggestionsTrack = document.getElementById('suggestions-track');
+                    const prevSuggestionBtn = document.getElementById('prev-suggestion');
+                    const nextSuggestionBtn = document.getElementById('next-suggestion');
+
+                    if (viewAllSuggestionsBtn && suggestionsModal && suggestionsTrack) {
+                        let currentIndex = 0;
+                        const itemsToShow = 3; // Mostra 3 sugestões de cada vez
+                        const totalItems = suggestionsTrack.children.length;
+                        const maxIndex = Math.ceil(totalItems / itemsToShow) - 1;
+
+                        // Atualiza a posição do carrossel
+                        const updateCarousel = () => {
+                            const percentage = -(currentIndex * 100);
+                            suggestionsTrack.style.transform = `translateX(${percentage}%)`;
+                            
+                            // Ativa/Desativa botões se estiver no início ou fim
+                            prevSuggestionBtn.disabled = currentIndex === 0;
+                            nextSuggestionBtn.disabled = currentIndex >= maxIndex;
+                            
+                            if (currentIndex === 0) prevSuggestionBtn.classList.add('opacity-50');
+                            else prevSuggestionBtn.classList.remove('opacity-50');
+                            
+                            if (currentIndex >= maxIndex) nextSuggestionBtn.classList.add('opacity-50');
+                            else nextSuggestionBtn.classList.remove('opacity-50');
+                        };
+
+                        viewAllSuggestionsBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            openModal(suggestionsModal);
+                            updateCarousel();
+                        });
+
+                        closeSuggestionsModalBtn.addEventListener('click', () => closeModal(suggestionsModal));
+
+                        prevSuggestionBtn.addEventListener('click', () => {
+                            if (currentIndex > 0) {
+                                currentIndex--;
+                                updateCarousel();
+                            }
+                        });
+
+                        nextSuggestionBtn.addEventListener('click', () => {
+                            if (currentIndex < maxIndex) {
+                                currentIndex++;
+                                updateCarousel();
+                            }
+                        });
+
+                        // Botão de Seguir no carrossel
+                        document.querySelectorAll('.follow-btn-carousel').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                this.innerHTML = '<span class="text-white text-sm">A Seguir</span>';
+                                this.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                                this.classList.add('bg-gray-600', 'cursor-default');
+                                this.disabled = true;
+                            });
+                        });
+                    }
+
+                    // --- Modal de Favoritos ---
+                    const favoritesLink = document.getElementById('favorites-app-link');
+                    const favoritesModal = document.getElementById('favorites-modal');
+                    const closeFavoritesBtn = document.getElementById('close-favorites-modal');
+                    const favoritesList = document.getElementById('favorites-list');
+
+                    if (favoritesLink && favoritesModal) {
+                        favoritesLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            // Limpa a lista e mostra mensagem estática, já que a funcionalidade de guardar foi removida
+                            favoritesList.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400">Ainda não tens publicações guardadas.</div>';
+                            openModal(favoritesModal);
+                        });
+
+                        closeFavoritesBtn.addEventListener('click', () => closeModal(favoritesModal));
+                    }
+
+                    // --- BOTÃO DE SEGUIR (GERAL) ---
+                    document.querySelectorAll('.follow-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            this.innerHTML = '<span class="text-gray-400 text-sm">a seguir</span>';
+                            this.classList.remove('text-blue-400', 'hover:text-white');
+                            this.classList.add('cursor-default');
+                        });
+                    });
+
+                    // --- AUTO-RESIZE DA TEXTAREA ---
+                    // Faz a caixa de texto crescer conforme escrevemos
+                    const postContent = document.getElementById('post-content');
+                    if (postContent) {
+                        postContent.addEventListener('input', function() {
+                            this.style.height = 'auto'; // Reseta altura
+                            this.style.height = (this.scrollHeight) + 'px'; // Define nova altura baseada no conteúdo
+                        });
+                    }
+
+
+                // --- CARROSSEL DE IMAGENS NOS POSTS PUBLICADOS ---
+                initializeCarousels();
+
+
+                });
+
+                // --- Re-inicializar funcionalidades após Turbo Stream atualizar ---
+                document.addEventListener('turbo:frame-load', () => {
+                    // Reinicializa os ícones Feather
+                    if (typeof feather !== 'undefined') feather.replace();
+                    
+                    // Reinicializa os carrosséis de imagens
+                    initializeCarousels();
+                });
+
+                // --- Função para inicializar carrosséis (MOVE O CÓDIGO QUE JÁ TENS) ---
+                function initializeCarousels() {
+                    document.querySelectorAll('.post-images-carousel').forEach(carousel => {
+                        const container = carousel.querySelector('.carousel-images');
+                        const images = carousel.querySelectorAll('.carousel-image');
+                        const prevBtn = carousel.querySelector('.carousel-prev');
+                        const nextBtn = carousel.querySelector('.carousel-next');
+                        const dots = carousel.querySelectorAll('.carousel-dot');
+                        
+                        if (images.length <= 1) return;
+                        
+                        let currentIndex = 0;
+                        
+                        const updateCarousel = () => {
+                            container.style.transform = `translateX(-${currentIndex * 100}%)`;
+                            
+                            dots.forEach((dot, i) => {
+                                if (i === currentIndex) {
+                                    dot.classList.add('bg-blue-500');
+                                    dot.classList.remove('bg-gray-600');
+                                } else {
+                                    dot.classList.add('bg-gray-600');
+                                    dot.classList.remove('bg-blue-500');
+                                }
+                            });
+                            
+                            prevBtn.disabled = currentIndex === 0;
+                            nextBtn.disabled = currentIndex === images.length - 1;
+                            
+                            prevBtn.classList.toggle('opacity-50', currentIndex === 0);
+                            nextBtn.classList.toggle('opacity-50', currentIndex === images.length - 1);
+                        };
+                        
+                        // Remove event listeners antigos (clona os botões)
+                        const newPrevBtn = prevBtn.cloneNode(true);
+                        const newNextBtn = nextBtn.cloneNode(true);
+                        prevBtn.replaceWith(newPrevBtn);
+                        nextBtn.replaceWith(newNextBtn);
+                        
+                        newPrevBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (currentIndex > 0) {
+                                currentIndex--;
+                                updateCarousel();
+                            }
+                        });
+                        
+                        newNextBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (currentIndex < images.length - 1) {
+                                currentIndex++;
+                                updateCarousel();
+                            }
+                        });
+                        
+                        dots.forEach((dot, index) => {
+                            dot.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                currentIndex = index;
+                                updateCarousel();
+                            });
+                        });
+                        
+                        updateCarousel();
+                    });
+                }
+
+                // Re-inicializa após Turbo Stream atualizar (já tens este evento)
+                    document.addEventListener('turbo:frame-load', () => {
+                        if (typeof feather !== 'undefined') feather.replace();
+                        initializeCarousels();
+                        
+                        // ADICIONA ESTA LINHA:
+                        if (typeof initFlowbite !== 'undefined') initFlowbite();
+                    });
+
+                    // ADICIONA TAMBÉM ESTE EVENTO NOVO (para Turbo Stream updates):
+                    document.addEventListener('turbo:before-stream-render', (event) => {
+                        // Depois do Turbo Stream renderizar, re-inicializa o Flowbite
+                        setTimeout(() => {
+                            if (typeof initFlowbite !== 'undefined') initFlowbite();
+                            if (typeof feather !== 'undefined') feather.replace();
+                        }, 50);
+                    });
+
+                    // --- Setas do Carrossel de Sugestões ---
+                    const suggestionsTrack = document.getElementById('suggestions-track');
+                    const prevBtn = document.getElementById('prev-suggestion');
+                    const nextBtn = document.getElementById('next-suggestion');
+
+                    if (suggestionsTrack && prevBtn && nextBtn) {
+                        // Botão anterior
+                        prevBtn.addEventListener('click', () => {
+                            suggestionsTrack.scrollBy({ left: -suggestionsTrack.offsetWidth / 3, behavior: 'smooth' });
+                        });
+                        
+                        // Botão seguinte
+                        nextBtn.addEventListener('click', () => {
+                            suggestionsTrack.scrollBy({ left: suggestionsTrack.offsetWidth / 3, behavior: 'smooth' });
+                        });
+                        
+                        // Atualiza estado dos botões ao fazer scroll
+                        const updateButtons = () => {
+                            prevBtn.disabled = suggestionsTrack.scrollLeft <= 0;
+                            nextBtn.disabled = suggestionsTrack.scrollLeft >= suggestionsTrack.scrollWidth - suggestionsTrack.offsetWidth;
+                        };
+                        
+                        suggestionsTrack.addEventListener('scroll', updateButtons);
+                        updateButtons(); // Inicializa
+                    }
+
+            </script>
+        <% else %>
+
+        <!------------------------------------ Logged-out Main Page ----------------------------------->
+        
+
+        <!-- Feature: Gestão de Equipas -->
+            <section id="equipas" class="relative py-24 px-6 overflow-hidden" style="scroll-margin-top: 72px;">
+                <%= image_tag "home_equipa2.jpg", class: "absolute inset-0 w-full h-full object-cover opacity-10 z-0", alt: "" %>
+                <div class="container mx-auto relative z-10">
+                    <div class="flex flex-col md:flex-row items-center gap-12">
+                        <div class="md:w-1/2">
+                            <span class="text-indigo-400 text-sm font-semibold uppercase tracking-widest mb-3 block">Equipas & Escalões</span>
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                                Todas as tuas equipas, <span style="background: linear-gradient(to right, #6366f1, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;">num só lugar</span>
+                            </h2>
+                            <p class="text-gray-400 text-lg mb-6">
+                                Cria e gere múltiplas equipas e escalões dentro do teu clube. Associa jogadores, atribui treinadores e acompanha cada equipa de forma independente.
+                            </p>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-indigo-400 flex-shrink-0"></i> Criação de equipas por modalidade e escalão</li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-indigo-400 flex-shrink-0"></i> Atribuição de jogadores e treinadores a cada equipa</li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-indigo-400 flex-shrink-0"></i> Visão global de toda a estrutura do clube</li>
+                            </ul>
+                        </div>
+                        <div class="md:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
+                            <%= image_tag "equipa_sportx.png", class: "w-full h-108 object-contain", alt: "Gestão de Equipas" %>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature: Gestão Financeira -->
+            <section id="finanças" class="relative py-24 px-6 overflow-hidden bg-gray-800" style="scroll-margin-top: 72px;">
+                <div class="container mx-auto relative z-10">
+                    <div class="flex flex-col md:flex-row-reverse items-center gap-12">
+                        <div class="md:w-1/2">
+                            <span class="text-orange-400 text-sm font-semibold uppercase tracking-widest mb-3 block">Finanças do Clube</span>
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                                O teu clube financeiramente <span style="background: linear-gradient(to right, #f97316, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;">sem surpresas</span>
+                            </h2>
+                            <p class="text-gray-400 text-lg mb-6">
+                                Regista receitas e despesas, acompanha o saldo em tempo real e toma decisões informadas sobre o futuro do clube - sem folhas de cálculo perdidas.
+                            </p>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-orange-400 flex-shrink-0"></i> Registo de receitas e despesas </li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-orange-400 flex-shrink-0"></i> Saldo atualizado automaticamente</li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-orange-400 flex-shrink-0"></i> Histórico financeiro sempre acessível à direção</li>
+                            </ul>
+                        </div>
+                        <div class="md:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
+                            <%= image_tag "finanças.png", class: "w-full h-86 object-contain", alt: "Gestão Financeira" %>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature: Gestão de Treinos -->
+            <section id="treinos" class="relative py-24 px-6 overflow-hidden" style="scroll-margin-top: 72px;">
+                <%= image_tag "home_treinos.jpg", class: "absolute inset-0 w-full h-full object-cover opacity-10 z-0", alt: "" %>
+                <div class="container mx-auto relative z-10">
+                    <div class="flex flex-col md:flex-row items-center gap-12">
+
+                        <div class="md:w-1/2">
+                            <span class="text-green-400 text-sm font-semibold uppercase tracking-widest mb-3 block">Treinos & Instalações</span>
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                                Planeia cada sessão <span style="background: linear-gradient(to right, #22c55e, #16a34a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;">ao milímetro</span>
+                            </h2>
+                            <p class="text-gray-400 text-lg mb-6">
+                                Agenda treinos com campo, zona e balneário definidos. Define horários recorrentes ou pontuais e elimina conflitos de instalações entre equipas.
+                            </p>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-green-400 flex-shrink-0"></i> Agendamento com campo, zona e balneário atribuídos</li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-green-400 flex-shrink-0"></i> Treinos recorrentes por dia da semana</li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-green-400 flex-shrink-0"></i> Gestão de centros de treino e infraestruturas</li>
+                            </ul>
+                        </div>
+                        <div class="md:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
+                            <%= image_tag "treinos.png", class: "w-full  object-contain", alt: "Gestão de Treinos" %>
+                        </div>
+                        
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature: Perfis -->
+            <section id="perfis" class="relative py-24 px-6 overflow-hidden bg-gray-800" style="scroll-margin-top: 72px;">
+                <div class="container mx-auto relative z-10">
+                    <div class="flex flex-col md:flex-row-reverse items-center gap-12">
+                        <div class="md:w-1/2">
+                            <span class="text-rose-400 text-sm font-semibold uppercase tracking-widest mb-3 block">Perfis Desportivos</span>
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                                A tua identidade desportiva, 
+                                <span style="background: linear-gradient(to right, #f43f5e, #e11d48);
+                                            -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;">
+                                            sempre contigo
+                                </span>
+                            </h2>
+                            <p class="text-gray-400 text-lg mb-6">
+                                Cada jogador, treinador e clube tem o seu perfil completo que contam a sua história dentro do desporto.
+                            </p>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-rose-400 flex-shrink-0"></i>
+                                Perfis para jogadores, treinadores, direção e clubes</li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-rose-400 flex-shrink-0"></i>
+                                Dados detalhados para cada tipo de conta</li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-rose-400 flex-shrink-0"></i>
+                                Personalizável à maneira de cada um</li>
+                            </ul>
+                        </div>
+                        <div class="md:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
+                            <%= image_tag "perfil_sportx.png", class: "w-full h-98 object-contain", alt: "Perfis" %>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature: Comunidade & Publicações -->
+            <section id="comunidade" class="relative py-24 px-6 overflow-hidden" style="scroll-margin-top: 72px;">
+                <%= image_tag "home_comunidade.jpg", class: "absolute inset-0 w-full h-full object-cover opacity-10 z-0", alt: "" %>
+                <div class="container mx-auto relative z-10">
+                    <div class="flex flex-col md:flex-row items-center gap-12">
+
+                        <div class="md:w-1/2">
+                            <span class="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-3 block">Comunidade & Publicações</span>
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                                Mais do que um clube - <span style="background: linear-gradient(to right, #3b82f6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;">uma comunidade</span>
+                            </h2>
+                            <p class="text-gray-400 text-lg mb-6">
+                                Publica, comenta, guarda e interage com conteúdo de clubes, jogadores e treinadores. Segue quem te inspira e mantém-te sempre a par do mundo desportivo.
+                            </p>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-blue-400 flex-shrink-0"></i> Feed personalizado com publicações de quem segues</li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-blue-400 flex-shrink-0"></i> Gostos, comentários e publicações guardadas</li>
+                                <li class="flex items-center gap-3"><i data-feather="check-circle" class="w-5 h-5 text-blue-400 flex-shrink-0"></i> Sugestões de perfis relevantes para seguir</li>
+                            </ul>
+                        </div>
+                        <div class="md:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
+                            <%= image_tag "exemplo_pub.png", class: "w-full h-86 object-contain", alt: "Comunidade" %>
+                        </div>
+                    </div>
+                        <div class="flex justify-center mt-10">
+                            <%= link_to "Começa Já", choose_account_type_path, class: "bg-blue-600 hover:bg-blue-800 px-10 py-4 rounded-md font-medium text-lg clickable" %>
+                        </div>
+                </div>
+            </section>
+
+        
+        <!-- Footer -->
+        <footer id="footer" class="bg-gray-800 text-gray-300">
+            <div class="container mx-auto py-12 px-6 items-center">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
+                    <!-- Brand -->
+                    <div class="max-w-xs mx-auto">
+                        <a href="#inicio">
+                            <div class="flex items-center mb-4" >
+                                <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+                                    <%= image_tag "logo_sem_texto.png", alt: "Logo", class: "w-full h-full object-cover" %>
+                                </div>
+                                <span class="ml-3 text-white font-bold text-lg">SportX</span>
+                            </div>
+                        </a>
+                            <p class="text-gray-400 mb-4">
+                            A plataforma definitiva para a gestão e análise de clubes, jogadores e desempenho.
+                            </p>
+                        
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="mx-auto">
+                        <h4 class="text-white font-semibold mb-4">Navegação</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#equipas" class="hover:text-orange-400 transition">Equipas & Escalões</a></li>
+                            <li><a href="#treinos" class="hover:text-orange-400 transition">Treinos & Instalações</a></li>
+                            <li><a href="#finanças" class="hover:text-orange-400 transition">Finanças do Clube</a></li>
+                            <li><a href="#comunidade" class="hover:text-orange-400 transition">Comunidade & Publicações</a></li>
+                            <li><a href="#perfis" class="hover:text-orange-400 transition">Perfis Desportivos</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact / Company -->
+                    <div class="mx-auto">
+                        <h4 class="text-white font-semibold mb-4">Contacto</h4>
+                        <div class="text-gray-400 text-sm space-y-2">
+                            <div style="margin-bottom: 17px;"><strong>SportX - Club Managment</strong></div>
+                            <div class="flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                                    <i data-feather="map-pin" class="w-4 h-4 text-blue-500 group-hover:text-red-500 transition-colors duration-150"></i>
+                                </span>
+                                <div><a href="https://maps.app.goo.gl/MafCMFdNprsmMgL36" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition">Av. Luís de Camões, 4470-194 Maia</a></div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                                    <i data-feather="phone" class="w-4 h-4 text-blue-500 group-hover:text-red-500 transition-colors duration-150"></i>
+                                </span>
+                                <div><a href="tel:+351912345678" class="hover:text-orange-400 transition">+351 912 345 678</a></div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                                    <i data-feather="mail" class="w-4 h-4 text-blue-500 group-hover:text-red-500 transition-colors duration-150"></i>
+                                </span>
+                                <div><a href="mailto:support.sportx@gmail.com" class="hover:text-orange-400 transition">support.sportx@gmail.com</a></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map -->
+                    <div class="mx-auto ml-5">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d630.7743905081369!2d-8.618508752518986!3d41.23297970912057!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd24665606eefb45%3A0xc5dd8b06cc341a7b!2sEscola%20Secund%C3%A1ria%20da%20Maia!5e0!3m2!1spt-PT!2spt!4v1768834005628!5m2!1spt-PT!2spt" width="300" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-lg"></iframe>
+                    </div>
+                </div>
+                <!-- Social Media Links -->
+                <div class="border-t border-gray-700 mt-8 pt-6 text-gray-350 text-sm font-bold">
+                    <div class="flex items-center justify-center space-x-4">
+                        <span>Siga-nos:</span>
+                        <div class="flex items-center space-x-3">
+                                <span class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center group hover:bg-orange-200 transition-colors duration-150 cursor-pointer">
+                                    <i data-feather="github" class="w-4 h-4 text-orange-200 group-hover:text-red-500 transition-colors duration-150"></i>
+                                </span>
+                                <span class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center group hover:bg-orange-200 transition-colors duration-150 cursor-pointer">
+                                    <i data-feather="instagram" class="w-4 h-4 text-orange-200 group-hover:text-red-500 transition-colors duration-150"></i>
+                                </span>
+                                <span class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center group hover:bg-orange-200 transition-colors duration-150 cursor-pointer">
+                                    <i data-feather="facebook" class="w-4 h-4 text-orange-200 group-hover:text-red-500 transition-colors duration-150"></i>
+                                </span>
+                                <span class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center group hover:bg-orange-200 transition-colors duration-150 cursor-pointer">
+                                    <i data-feather="twitter" class="w-4 h-4 text-orange-200 group-hover:text-red-500 transition-colors duration-150"></i>
+                                </span>
+                                <span class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center group hover:bg-orange-200 transition-colors duration-150 cursor-pointer">
+                                    <i data-feather="youtube" class="w-4 h-4 text-orange-200 group-hover:text-red-500 transition-colors duration-150"></i>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500 text-sm">
+                    <div class="mb-2">© 2026 SportX - Club Managment. Todos os direitos reservados.</div>
+                    <div>Desenvolvido por Tomás Nogueira e Gonçalo Silva • <a href="Política De Privacidade - Sport X.pdf" download>Política de Privacidade</a> • <a href="Termos De Utilização - Sport X.pdf" download>Termos de Utilização</a></div>
+                </div>
+            </div>
+        </footer>
+
+        <% end %>
+    </body>

@@ -1,0 +1,649 @@
+<body class="min-h-screen flex text-white bg-gray-900">
+<!---------------------------------------------------- NOME E LOGO DO CLUBE ---------------------------------------------------->
+    <div class="w-64 bg-slate-800 shadow-xl min-h-screen flex flex-col border-r border-slate-700">
+    <!-- Logo e nome do clube -->
+        <div class="p-6 border-b border-slate-700">
+            <div class="flex items-center justify-center mb-3">
+                
+                <% if current_user.admin_profile.profile_picture.attached? %>
+                    <%= image_tag url_for(current_user.admin_profile.profile_picture), class: "w-20 h-20 rounded-full border-1" %>
+                <% else %>
+                    <%= image_tag "default_pp.jpg", class: "w-20 h-20 rounded-full border-1" %>
+                <% end %>
+
+                
+            </div>
+            <h1 class="text-lg font-bold text-center text-white">
+                <%= current_user.admin_profile.name %>
+            </h1>
+        </div>
+<!---------------------------------------------------- OPÇÕES DO SIDEBAR ---------------------------------------------------->
+        <nav class="flex-1 p-4 space-y-2">
+            
+            <%= link_to admin_dashboard_path do %>
+            <div class="sidebar-item flex items-center px-4 py-3 text-slate-300 hover:bg-slate-700 hover:text-blue-400 rounded-xl border-l-4 border-transparent hover:border-blue-500 transition-all duration-300">
+                <i data-feather="home" class="sidebar-icon text-blue-400 w-5 h-5 mr-3"></i>
+                <span class="font-medium">Dashboard</span>
+            </div>
+            <% end %>
+
+            <% if current_user.admin_profile.super? %>
+              <%= link_to list_admins_dashboard_path do %>
+              <div class="sidebar-item flex items-center px-4 py-3 text-slate-300 hover:bg-slate-700 hover:text-purple-400 rounded-xl border-l-4 border-transparent hover:border-purple-500 transition-all duration-300">
+                  <i data-feather="user" class="sidebar-icon text-purple-400 w-5 h-5 mr-3"></i>
+                  <span class="font-medium">Admins</span>
+              </div>
+              <% end %>
+            <% end %>
+
+            <%= link_to club_verification_dashboard_path do %>
+                <div class="sidebar-item flex items-center px-4 py-3 bg-slate-700 text-green-400 rounded-xl border-l-4 border-green-500 transition-all duration-300">
+                    <i data-feather="users" class="sidebar-icon text-green-400 w-5 h-5 mr-3"></i>
+                    <span class="font-medium">Verificação de Clubes</span>
+                </div>
+            <% end %>
+
+
+            <%= link_to reports_dashboard_path do %>
+            <div  class="sidebar-item flex items-center px-4 py-3 text-slate-300 hover:bg-slate-700 hover:text-yellow-400 rounded-xl border-l-4 border-transparent hover:border-yellow-500 transition-all duration-300">
+                <i data-feather="alert-triangle" class="sidebar-icon text-yellow-400 w-5 h-5 mr-3"></i>
+                <span class="font-medium">Reports</span>
+            </div>
+            <% end %>
+
+            <%= link_to bans_dashboard_path do %>
+            <div class="sidebar-item flex items-center px-4 py-3 text-slate-300 hover:bg-slate-700 hover:text-red-400 rounded-xl border-l-4 border-transparent hover:border-red-500 transition-all duration-300">
+                <i data-feather="slash" class="sidebar-icon text-red-400 w-5 h-5 mr-3"></i>
+                <span class="font-medium">Bans</span>
+            </div>
+            <% end %>
+
+            <%= link_to root_path do %>
+            <div class="sidebar-item flex items-center px-4 py-3 text-slate-300 hover:bg-slate-700 hover:text-gray-400 rounded-xl border-l-4 border-transparent hover:border-gray-400 transition-all duration-300">
+                <i data-feather="arrow-left" class="sidebar-icon text-gray-400 w-5 h-5 mr-3"></i>
+                <span class="font-medium">Página Inicial</span>
+            </div>
+            <% end %>
+        </nav>
+
+
+        <div class="p-4 border-t border-slate-700">
+            <div class="flex items-center space-x-3">
+                <% if current_user.admin_profile.profile_picture.attached? %>
+                    <%= image_tag url_for(current_user.admin_profile.profile_picture), class: "w-10 h-10 rounded-full border-2 border-slate-600" %>
+                <% else %>
+                    <%= image_tag "default_pp.jpg", class: "w-10 h-10 rounded-full border-2 border-slate-600" %>
+                <% end %>
+                <div class="flex-1">
+                        <p class="text-sm font-medium text-white"> <%= current_user.admin_profile.name %> </p>
+                </div>
+                <%= button_to destroy_user_session_path, method: :delete do %>
+                    <i data-feather="log-out" class="text-slate-400 hover:text-red-400 cursor-pointer transition-colors"></i>
+                <% end %>
+            </div>
+        </div>
+</div>
+<!-------------------------------------------------------------------------------- MAIN ------------------------------------------------------------------------->
+    <div class="flex-1 p-8">
+
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-green-600 slide-in">Verificação de Clubes</h1>
+                    <p class="text-slate-400 mt-1">Aprove os documentos de verificação dos clubes para que possam começar a usar a plataforma livremente!</p> 
+                </div>
+            </div>
+            <br>
+
+            <!---------------------------------------------------- PESQUISAS ---------------------------------------------------->
+            <div class="flex items-center mb-6 gap-x-4">
+                <%= form_with url: club_verification_dashboard_path, method: :get, local: true, id: "search-form" do %>
+                    <%= hidden_field_tag :type, @type %>
+                    <div class="relative w-80">
+                        <i data-feather="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none z-10"></i>
+                        <%= text_field_tag :query, params[:query], placeholder: "Pesquisar Clubes", class: "bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-10 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white", oninput: "clearTimeout(window.searchTimeout); window.searchTimeout = setTimeout(() => this.form.requestSubmit(), 1000); toggleClearButton(this)", id: "search-input" %>
+                        <button type="button" id="clear-search" onclick="clearSearch()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition <%= 'hidden' unless params[:query].present? %>">
+                            <i data-feather="x" class="w-4 h-4 text-red-400"></i>
+                        </button>
+                    </div>
+                <% end %>
+
+                <%= link_to club_verification_dashboard_path(type: "Pendentes") do %>
+                    <button class="px-6 py-2 rounded-full border transition-all duration-200 <%= @type == "Pendentes" ? 'bg-blue-600 border-blue-500 text-white' : 'bg-gray-800 border-gray-600 text-gray-300 hover:border-blue-500 hover:text-blue-400 hover:bg-blue-500/10' %>">Pendentes</button>
+                <% end %>
+                <%= link_to club_verification_dashboard_path(type: "Aprovados") do %>
+                    <button class="px-6 py-2 rounded-full border transition-all duration-200 <%= @type == "Aprovados" ? 'bg-blue-600 border-blue-500 text-white' : 'bg-gray-800 border-gray-600 text-gray-300 hover:border-blue-500 hover:text-blue-400 hover:bg-blue-500/10' %>">Aprovados</button>
+                <% end %>
+                <%= link_to club_verification_dashboard_path(type: "Rejeitados") do %>
+                    <button class="px-6 py-2 rounded-full border transition-all duration-200 <%= @type == "Rejeitados" ? 'bg-blue-600 border-blue-500 text-white' : 'bg-gray-800 border-gray-600 text-gray-300 hover:border-blue-500 hover:text-blue-400 hover:bg-blue-500/10' %>">Rejeitados</button>
+                <% end %>
+
+            </div>
+
+            
+<!-------------------------------------------------------------------------------- Clubes ------------------------------------------------------------------------->
+
+            <div class="mb-12">
+                <% if !params[:query].present? or (params[:query].present? and @clubs_count != 0) %>
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-green-400 flex items-center space-x-2">
+                            <i data-feather="users" class="w-6 h-6"></i>
+                            <span>Clubes ( <%= @clubs_count %> )</span>
+                        </h3>
+                    </div>
+                <% end %>
+
+                <% if params[:query].present? and @clubs_count == 0 %>
+                    <br>
+                    <div class="flex justify-center items-center mb-8">
+                        <div class="flex flex-col items-start">
+                            <h1 class="text-2xl text-neutral-400 slide-in mx-auto">A pesquisa "<%= params[:query] %>" não retornou nenhum clube! </h1>
+                        </div>
+                    </div>
+                <% end %>
+
+                <% if @clubs&.any? %>
+                    <div class="grid grid-cols-4 justify-center gap-6">
+                    <% @clubs.each do |club| %>
+                        <div class="bg-gray-800 border-l-4 border-green-700 rounded-xl overflow-hidden transition-all hover:scale-[1.01] hover:shadow-lg hover:shadow-primary/10 relative">
+                            <div class="clickable" data-modal-target="club-verification-<%=club.id%>" data-modal-toggle="club-verification-<%=club.id%>">
+                                <div class="relative h-40 bg-gradient-to-r from-primary/20 to-secondary/20">
+                                    <div class="relative w-full h-40 rounded-lg overflow-hidden shadow-lg">
+                                        <% if club.banner_picture.attached? %>
+                                            <%= image_tag url_for(club.banner_picture), class: "w-full h-full object-cover" %>
+                                        <% else %>
+                                            <%= image_tag "default_banner.jpg", class: "w-full h-full object-cover" %>
+                                        <% end %>
+                                    </div>
+                                    <div class="absolute top-20 left-4 w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-100 group">
+                                        <% if club.profile_picture.attached? %>
+                                            <%= image_tag url_for(club.profile_picture), class: "w-full h-full object-cover " %>
+                                        <% else %>
+                                            <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover " %>
+                                        <% end %>
+                                    </div>
+                                </div>
+                                <div class="p-4 pt-14 pb-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-bold text-lg"> <%= club.name %> </h3>
+                                            <p class="text-gray-400 text-sm"> <%= l(club.foundation_date, format: :long, locale: :pt) %>
+                                            <span class="absolute top-3 right-3 z-10 text-xs font-semibold px-2.5 py-2 rounded-full whitespace-nowrap
+                                                <%= club.status == 'pending'  ? 'bg-yellow-700 text-yellow-400 ring-1 ring-yellow-500/40' : '' %>
+                                                <%= club.status == 'verified' ? 'bg-green-700  text-green-400  ring-1 ring-green-500/40'  : '' %>
+                                                <%= club.status == 'rejected' ? 'bg-red-700    text-red-200    ring-1 ring-red-500/40'    : '' %>
+                                            ">
+                                                <%= club.status == 'pending'  ? 'Verificação Pendente'  : '' %>
+                                                <%= club.status == 'verified' ? 'Verificado'    : '' %>
+                                                <%= club.status == 'rejected' ? 'Verificação Rejeitada' : '' %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                            <div id="club-verification-<%=club.id%>" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+                                <div class="bg-slate-800 rounded-lg shadow-xl p-8 w-full max-w-md border border-slate-700">
+                                    
+                                    <div class="flex justify-between items-center mb-6">
+                                        <h2 class="text-2xl font-bold text-green-400">Verificação</h2>
+                                        <button data-modal-hide="club-verification-<%=club.id%>" class="text-slate-400 hover:text-white">
+                                            <i data-feather="x"></i>
+                                        </button>
+                                    </div>
+
+                                    <%= link_to club_profile_path(club), class: "block mb-6 rounded-xl overflow-hidden border border-slate-600 hover:border-slate-400 transition-colors" do %>
+
+                                        <div class="relative h-24 w-full">
+                                            <% if club.banner_picture.attached? %>
+                                                <%= image_tag url_for(club.banner_picture), class: "w-full h-full object-cover" %>
+                                            <% else %>
+                                                <%= image_tag "default_banner.jpg", class: "w-full h-full object-cover" %>
+                                            <% end %>
+                                        </div>
+
+                                        <div class="bg-slate-700 px-4 pb-4 pt-10 relative">
+                                            <div class="absolute -top-8 left-4 w-16 h-16 rounded-full overflow-hidden border-4 border-slate-700 shadow-lg">
+                                                <% if club.profile_picture.attached? %>
+                                                    <%= image_tag url_for(club.profile_picture), class: "w-full h-full object-cover" %>
+                                                <% else %>
+                                                    <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover" %>
+                                                <% end %>
+                                            </div>
+
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-lg font-bold text-white"><%= club.name %></span>
+                                                <span class="text-xs font-semibold px-3 py-1 rounded-full
+                                                    <%= club.status == 'pending' && club.decided_by != nil ? 'bg-blue-700 text-blue-200 ring-1 ring-blue-700/40' : '' %>
+                                                    <%= club.status == 'pending' && club.decided_by == nil ? 'bg-yellow-700 text-yellow-400 ring-1 ring-yellow-500/40' : '' %>
+                                                    <%= club.status == 'verified' ? 'bg-green-700 text-green-400 ring-1 ring-green-500/40' : '' %>
+                                                    <%= club.status == 'rejected' ? 'bg-red-700 text-red-200 ring-1 ring-red-500/40' : '' %>
+                                                    ">
+                                                    <% if club.status == 'pending' && club.decided_by != nil %>
+                                                        Nova Verificação Solicitada
+                                                    <% elsif club.status == 'pending' %>
+                                                        Verificação Pendente
+                                                    <% elsif club.status == 'verified' %>
+                                                        Verificado
+                                                    <% elsif club.status == 'rejected' %>
+                                                        Verificação Rejeitada
+                                                    <% end %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    <% end %>
+
+                                    <% if club.decided_by != nil %>
+                                        <label class="block text-sm font-medium text-slate-300 mb-2">Última decisão tomada por:</label>
+                                        <% admin = AdminProfile.find_by(id: club.decided_by) %>
+                                        <%= link_to admin_profile_path(admin), class: "block mb-6 rounded-xl overflow-hidden border border-slate-600 hover:border-slate-400 transition-colors" do %>
+
+                                            <div class="relative h-24 w-full">
+                                                <% if admin.banner_picture.attached? %>
+                                                    <%= image_tag url_for(admin.banner_picture), class: "w-full h-full object-cover" %>
+                                                <% else %>
+                                                    <%= image_tag "default_banner.jpg", class: "w-full h-full object-cover" %>
+                                                <% end %>
+                                            </div>
+
+                                            <div class="bg-slate-700 px-4 pb-4 pt-10 relative">
+                                                <div class="absolute -top-8 left-4 w-16 h-16 rounded-full overflow-hidden border-4 border-slate-700 shadow-lg">
+                                                    <% if admin.profile_picture.attached? %>
+                                                        <%= image_tag url_for(admin.profile_picture), class: "w-full h-full object-cover" %>
+                                                    <% else %>
+                                                        <%= image_tag "default_pp.jpg", class: "w-full h-full object-cover" %>
+                                                    <% end %>
+                                                </div>
+
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-lg font-bold text-white"><%= admin.name %></span>
+                                                </div>
+                                            </div>
+                                        <% end %>
+                                    <% end %>
+
+                                    <label class="block text-sm font-medium text-slate-300 mb-2">Documento de Verificação</label>
+                                    <% doc = club.verification_document %>
+                                    <% is_pdf = doc.attached? && doc.content_type == "application/pdf" %>
+
+                                    <div id="profile-pic-container-<%= club.id %>"
+                                        class="w-full h-48 rounded-lg overflow-hidden border-2 border-slate-600 <%= is_pdf ? 'cursor-default' : 'cursor-pointer hover:border-slate-400' %> transition-colors mb-4"
+                                        data-doc-type="<%= is_pdf ? 'pdf' : 'image' %>">
+
+                                    <% if is_pdf %>
+                                        <div class="w-full h-full flex flex-col items-center justify-center bg-slate-700 gap-2 pointer-events-none"
+                                            id="profile-pic-img-<%= club.id %>"
+                                            data-pdf-url="<%= url_for(doc) %>">
+                                            <i data-feather="file-text" class="w-10 h-10 text-slate-400"></i>
+                                            <span class="text-slate-400 text-sm">Clique para ver o PDF</span>
+                                        </div>
+                                    <% else %>
+                                        <%= image_tag url_for(doc),
+                                            class: "w-full h-full object-cover",
+                                            id: "profile-pic-img-#{club.id}" %>
+                                    <% end %>
+                                    </div>
+
+                                    <div class="flex w-full gap-4">
+                                        <% if club.status != 'verified' %>
+                                            <button type="button"
+                                                data-modal-target="accept-verification-<%=club.id%>"
+                                                data-modal-toggle="accept-verification-<%=club.id%>"
+                                                class="flex-1 bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg transition-colors cursor-pointer">
+                                                <% if club.status == 'pending' %>
+                                                    Aceitar
+                                                <% elsif club.status == 'rejected' %>
+                                                    Verificar Clube
+                                                <% end %>
+                                            </button>
+                                        <% end %>
+                                        
+                                        <% if club.status != 'rejected' %>
+                                            <button type="button"
+                                                data-modal-target="reject-verification-<%=club.id%>"
+                                                data-modal-toggle="reject-verification-<%=club.id%>"
+                                                class="flex-1 bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                                                <% if club.status == 'pending' %>
+                                                    Rejeitar
+                                                <% elsif club.status == 'verified' %>
+                                                    Revogar Verificação
+                                                <% end %>
+                                            </button>
+                                        <% end %>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div id="accept-verification-<%=club.id%>" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal">
+                                <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl border border-gray-700 transform transition-all">
+                                    <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-900 rounded-full">
+                                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-xl font-semibold text-white text-center mb-2">Confirmar ação</h3>
+                                    <p class="text-gray-300 text-center mb-6">Tem a certeza que pretende aceitar o documento de verificação de <%= club.name %> ? </p>
+                                    <div class="flex gap-3 mt-4">
+                                        <button type="button" data-modal-hide="accept-verification-<%=club.id%>" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium">
+                                            Cancelar
+                                        </button>
+                                        <%= button_to "Aceitar", accept_verification_club_profile_path(club), method: :patch, params: {admin_id: current_user.admin_profile.id}, 
+                                            class: "flex-1 text-center bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg transition-colors",
+                                            form: { style: "display: contents" } %>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="reject-verification-<%=club.id%>" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal">
+                                <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl border border-gray-700 transform transition-all">
+                                    <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-900 rounded-full">
+                                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-xl font-semibold text-white text-center mb-2">Confirmar ação</h3>
+                                    <p class="text-gray-300 text-center mb-6">Tem a certeza que pretende rejeitar o documento de verificação de <%= club.name %> ? </p>
+                                    <div class="flex gap-3 mt-4">
+                                        <button type="button" data-modal-hide="reject-verification-<%=club.id%>" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium">
+                                            Cancelar
+                                        </button>
+                                        <%= button_to "Rejeitar", reject_verification_club_profile_path(club), method: :patch, params: {admin_id: current_user.admin_profile.id},
+                                            class: "flex-1 text-center bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg transition-colors",
+                                            form: { style: "display: contents" } %>
+                                    </div>
+                                </div>
+                            </div>
+
+                    <% end %>
+
+                <% end %>
+
+                </div> 
+
+                <% if @clubs.total_pages > 1 %>
+                <div class="mt-8 flex justify-end">
+                    <div class="flex flex-col items-end gap-3">               
+
+                    <div class="flex items-center gap-2">
+                        <% if @clubs.prev_page %>
+                        <%= link_to club_verification_dashboard_path(type: @type, query: params[:query], clubs_page: @clubs.prev_page), class: "flex items-center gap-2 px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg border border-gray-700 transition-all duration-200 font-medium" do %>
+                            <i data-feather="chevron-left" class="w-4 h-4"></i>
+                            <span>Anterior</span>
+                        <% end %>
+                        <% else %>
+                        <div class="flex items-center gap-2 px-4 py-2.5 bg-gray-800/50 text-gray-600 rounded-lg border border-gray-700/50 cursor-not-allowed font-medium">
+                            <i data-feather="chevron-left" class="w-4 h-4"></i>
+                            <span>Anterior</span>
+                        </div>
+                        <% end %>
+
+                        <div class="flex items-center gap-1">
+                        <% (1..@clubs.total_pages).each do |page| %>
+                            <% if page == @clubs.current_page %>
+                            <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-green-700 text-white font-bold border-2 border-green-600 shadow-lg">
+                                <%= page %>
+                            </div>
+                            <% else %>
+                            <%= link_to page, club_verification_dashboard_path(type: @type, query: params[:query], clubs_page: page), class: "w-10 h-10 flex items-center justify-center rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white border border-gray-700 transition-all duration-200 font-medium" %>
+                            <% end %>
+                        <% end %>
+                        </div>
+
+                        <% if @clubs.next_page %>
+                        <%= link_to club_verification_dashboard_path(type: @type, query: params[:query], clubs_page: @clubs.next_page), class: "flex items-center gap-2 px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg border border-gray-700 transition-all duration-200 font-medium" do %>
+                            <span>Seguinte</span>
+                            <i data-feather="chevron-right" class="w-4 h-4"></i>
+                        <% end %>
+                        <% else %>
+                        <div class="flex items-center gap-2 px-4 py-2.5 bg-gray-800/50 text-gray-600 rounded-lg border border-gray-700/50 cursor-not-allowed font-medium">
+                            <span>Seguinte</span>
+                            <i data-feather="chevron-right" class="w-4 h-4"></i>
+                        </div>
+                        <% end %>
+                    </div>
+                    </div>
+                </div>
+
+                <% elsif !@clubs&.any? and !params[:query].present? %>
+                    <div class="flex justify-center items-center mb-8">
+                        <div class="flex flex-col items-start">
+                            <h1 class="text-2xl text-neutral-400 slide-in mx-auto">Nenhum clube nesta secção!</h1>
+                        </div>
+                    </div>
+                <% end %>
+                
+            </div>
+            
+    </div>
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden items-center justify-center p-4">
+        <div id="modal-image-container" class="relative">
+            <img id="modal-image" src="" alt="Document Fullscreen"
+                class="rounded-lg object-contain cursor-zoom-in transition-all duration-300"
+                style="width: 500px; height: 350px; max-width: 90vw; max-height: 80vh;">
+            <button id="close-image-modal">
+                <i data-feather="x" class="w-3 h-3"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- PDF Modal -->
+    <div id="pdf-modal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden items-center justify-center p-4">
+        <div id="pdf-modal-container" class="relative flex flex-col transition-all duration-300" style="width: 800px; height: 85vh; max-width: 90vw; max-height: 90vh;">
+            <div class="absolute top-2 right-2 z-10 flex gap-2">
+                <button id="zoom-pdf-modal" class="bg-gray-800 hover:bg-blue-600 text-white rounded-full p-2 transition-colors">
+                    <i data-feather="maximize-2" class="w-4 h-4"></i>
+                </button>
+                <button id="close-pdf-modal" class="bg-gray-800 hover:bg-red-500 text-white rounded-full p-2 transition-colors">
+                    <i data-feather="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <iframe id="modal-pdf" src="" class="w-full flex-1 rounded-lg border border-slate-600"></iframe>
+        </div>
+    </div>
+
+<script>
+    feather.replace()
+</script>
+
+<!-- Configuração da cor principal e secundária do tailwind -->
+
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    primary: {
+                        500: '#6366f1',
+                    },
+                    secondary: {
+                        500: '#8b5cf6',
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    primary: {
+                        50: '#f0f9ff',
+                        100: '#e0f2fe',
+                        200: '#bae6fd',
+                        300: '#7dd3fc',
+                        400: '#38bdf8',
+                        500: '#0ea5e9',
+                        600: '#0284c7',
+                        700: '#0369a1',
+                        800: '#075985',
+                        900: '#0c4a6e',
+                    },
+                    secondary: {
+                        50: '#fdf4ff',
+                        100: '#fae8ff',
+                        200: '#f5d0fe',
+                        300: '#f0abfc',
+                        400: '#e879f9',
+                        500: '#d946ef',
+                        600: '#c026d3',
+                        700: '#a21caf',
+                        800: '#86198f',
+                        900: '#701a75',
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<script>
+    function toggleClearButton(input) {
+        const clearBtn = document.getElementById('clear-search');
+        if (input.value.length > 0) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+    }
+
+    function clearSearch() {
+        const input = document.getElementById('search-input');
+        input.value = '';
+        document.getElementById('clear-search').classList.add('hidden');
+        document.getElementById('search-form').requestSubmit();
+    }
+
+    // Declarações primeiro — só depois de declarar é que podes usar estas variáveis
+    const imageModal     = document.getElementById('image-modal');
+    const modalImage     = document.getElementById('modal-image');
+    const closeImageBtn  = document.getElementById('close-image-modal');
+    const pdfModal       = document.getElementById('pdf-modal');
+    const modalPdf       = document.getElementById('modal-pdf');
+    const closePdfBtn    = document.getElementById('close-pdf-modal');
+
+    const pdfModalContainer = document.getElementById('pdf-modal-container');
+    const zoomPdfBtn        = document.getElementById('zoom-pdf-modal');
+    let isPdfZoomed = false;
+
+    zoomPdfBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isPdfZoomed) {
+            pdfModalContainer.style.width  = '800px';
+            pdfModalContainer.style.height = '85vh';
+            isPdfZoomed = false;
+        } else {
+            pdfModalContainer.style.width  = '95vw';
+            pdfModalContainer.style.height = '95vh';
+            isPdfZoomed = true;
+        }
+    });
+
+    const closePdfModal = () => {
+        pdfModal.classList.add('hidden');
+        pdfModal.classList.remove('flex');
+        document.body.style.overflow = '';
+        modalPdf.src = '';
+        isPdfZoomed = false;
+        pdfModalContainer.style.width  = '800px';
+        pdfModalContainer.style.height = '85vh';
+    };
+
+    let isZoomed = false;
+
+    // Fecha o modal de imagem e reseta o zoom
+    const closeImageModal = () => {
+        imageModal.classList.add('hidden');
+        imageModal.classList.remove('flex');
+        document.body.style.overflow = '';
+        // Reseta o zoom para a próxima vez que abrir
+        isZoomed = false;
+        modalImage.style.width  = '500px';
+        modalImage.style.height = '350px';
+        modalImage.classList.replace('cursor-zoom-out', 'cursor-zoom-in');
+    };
+
+
+    // Zoom na imagem ao clicar
+    modalImage.addEventListener('click', (e) => {
+        e.stopPropagation(); // impede que o clique chegue ao fundo escuro e feche o modal
+        if (isZoomed) {
+            modalImage.style.width  = '500px';
+            modalImage.style.height = '350px';
+            modalImage.classList.replace('cursor-zoom-out', 'cursor-zoom-in');
+            isZoomed = false;
+        } else {
+            modalImage.style.width  = '90vw';
+            modalImage.style.height = '80vh';
+            modalImage.classList.replace('cursor-zoom-in', 'cursor-zoom-out');
+            isZoomed = true;
+        }
+    });
+
+    // Botões de fechar
+    closeImageBtn.addEventListener('click', closeImageModal);
+    closePdfBtn.addEventListener('click', closePdfModal);
+
+    // Fechar ao clicar no fundo escuro
+    imageModal.addEventListener('click', (e) => { if (e.target === imageModal) closeImageModal(); });
+    pdfModal.addEventListener('click',   (e) => { if (e.target === pdfModal)   closePdfModal();   });
+
+    // Listener em cada contentor de documento
+    document.querySelectorAll('[id^="profile-pic-container-"]').forEach(container => {
+        const clubId  = container.id.replace('profile-pic-container-', '');
+        const docType = container.dataset.docType; // "pdf" ou "image", definido no HTML
+
+        container.addEventListener('click', () => {
+            const el = document.getElementById('profile-pic-img-' + clubId);
+            if (!el) return;
+
+            if (docType === 'pdf') {
+                // Abre o modal de PDF com o src do iframe
+                modalPdf.src = el.dataset.pdfUrl;
+                pdfModal.classList.remove('hidden');
+                pdfModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Abre o modal de imagem
+                modalImage.src = el.src;
+                imageModal.classList.remove('hidden');
+                imageModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+
+    feather.replace();
+</script>
+
+<style>
+    #modal-image-container #close-image-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(41, 41, 51, 0.5); /* cinza quase transparente */
+            color: white;
+            border-radius: 9999px; /* rounded-full */
+            padding: 0.5rem; /* p-2 */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, background-color 0.3s ease, visibility 0.3s ease;
+        }
+
+        #modal-image-container:hover #close-image-modal {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #modal-image-container #close-image-modal:hover {
+            background-color: #ef4444; /* red-500 */
+        }
+</style>

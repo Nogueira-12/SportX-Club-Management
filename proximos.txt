@@ -1,0 +1,3 @@
+para apresentar:
+
+ngrok http 3000 num segundo terminal com o servidor aberto
